@@ -19,8 +19,7 @@ Color Path = DARKGRAY;
 Color Green = GREEN; 
 Color DarkGreen = DARKGREEN; 
 Color Orange = ORANGE; 
-Color Blue = SKYBLUE; 
-
+Color Blue = SKYBLUE;
 
 enum Terrain
 {
@@ -38,7 +37,7 @@ struct Node
     Node* parent; // Pointer to the parent node
     Terrain terrain; // Terrain type of the node
     float terrainCostMultiplier; // Cost multiplier based on terrain type
-    bool operator==(const Node& other) const
+    bool operator == (const Node& other) const
     {
         return x == other.x && y == other.y;
     }
@@ -84,7 +83,7 @@ std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<
     while (!openList.empty())
     {
         // Get the node with the lowest f value
-        auto currentNode = std::min_element(openList.begin(), openList.end(), [](const Node* a, const Node* b)
+        auto currentNode = min_element(openList.begin(), openList.end(), [](const Node* a, const Node* b)
         {
             return a->f < b->f;
         });
@@ -102,7 +101,7 @@ std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<
                 path.push_back(current);
                 current = current->parent;
             }
-            std::reverse(path.begin(), path.end());
+            reverse(path.begin(), path.end());
             return path;
         }
 
@@ -130,9 +129,9 @@ std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<
                 {
                     continue;
                 }
-
+                
                 // Child is on the closedList
-                if (std::find(closedList.begin(), closedList.end(), &child) != closedList.end())
+                if (find(closedList.begin(), closedList.end(), &child) != closedList.end())
                 {
                     continue;
                 }
@@ -152,7 +151,6 @@ std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<
                 {
                     isNewPath = true;
                 }
-
                 if (isNewPath)
                 {
                     child.parent = current;
@@ -162,7 +160,6 @@ std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<
             }
         }
     }
-
     // If no path is found, return an empty path
     return {};
 }
@@ -215,7 +212,7 @@ bool endSelected = false;
 int main()
 {
     InitWindow(width, height, "PathFinding");
-    SetTargetFPS(30);
+    SetTargetFPS(60);
     
     setCellSize();
     
@@ -293,6 +290,15 @@ int main()
         BeginDrawing();
         ClearBackground(Grey);
         
+        // Reset start and end selection flags
+        if (IsKeyPressed(KEY_R))
+        {
+            startSelected = false;
+            endSelected = false;
+        }
+        if(!start) startSelected = false;
+        if(!goal) endSelected = false;
+        
         // Handle user input to select start and end nodes
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
@@ -339,9 +345,9 @@ int main()
             const std::vector<Node*> path = astar(start, goal, grid);
 
             // Print the path
-            if(!noUpdate)
+            /*if(!noUpdate)
             {
-                /*if (!path.empty())
+                if (!path.empty())
                 {
                     std::cout << "Path found :\n";
                     for (const auto& node : path)
@@ -357,8 +363,8 @@ int main()
                 else
                 {
                     std::cout << "Insanity is doing the same thing over and over again and expecting different results. \n";
-                }*/
-            }
+                }
+            }*/
             printGridWithPath(grid, path);
             DrawRectangle(start->x * cellSize, start->y * cellSize, cellSize-1, cellSize-1, YELLOW);
             DrawRectangle(goal->x * cellSize, goal->y * cellSize, cellSize-1, cellSize-1, RED);
