@@ -66,7 +66,7 @@ float getTerrainCost(const Node& node)
         case Difficult:
             return 2.0f;
         case Obstacle:
-            return NULL;
+            return std::numeric_limits<float>::infinity();
     }
 }
 
@@ -173,46 +173,49 @@ void printGridWithPath(const std::vector<std::vector<Node>>& grid, const std::ve
     {
         for (int j = 0; j < cols; ++j)
         {
-            const Node& node = grid[i][j];
-            if (std::find(path.begin(), path.end(), &node) != path.end())
+            const Node& node = grid[j][i];
+            if (find(path.begin(), path.end(), &node) != path.end())
             {
-                std::cout << " * "; // Mark path nodes with *
+                //std::cout << " * "; // Mark path nodes with *
                 DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, Path);
             }
             else if (node.obstacle || node.terrain == Obstacle)
             {
-                std::cout << " X "; // Mark obstacle nodes with X
+                //std::cout << " X "; // Mark obstacle nodes with X
                 DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, Blue);
             }
             else if(node.terrain == Normal)
             {
-                std::cout << " . "; // Mark Normal nodes with .
+                //std::cout << " . "; // Mark Normal nodes with .
                 DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, Green);
             }
             else if(node.terrain == Challenging)
             {
-                std::cout << " C "; // Mark Challenging nodes with C
+                //std::cout << " C "; // Mark Challenging nodes with C
                 DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, Orange);
             }
             else if(node.terrain == Difficult)
             {
-                std::cout << " D "; // Mark Difficult nodes with D
+                //std::cout << " D "; // Mark Difficult nodes with D
                 DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, DarkGreen);
             }
             else
             {
-                std::cout << "E "; // Mark empty nodes with E
+                //std::cout << "E "; // Mark empty nodes with E
                 DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, Grey);
             }
         }
-        std::cout << '\n';
+        //std::cout << '\n';
     }
 }
+
+bool startSelected = false;
+bool endSelected = false;
 
 int main()
 {
     InitWindow(width, height, "PathFinding");
-    SetTargetFPS(60);
+    SetTargetFPS(30);
     
     setCellSize();
     
@@ -284,41 +287,83 @@ int main()
     grid[8][3].terrain = Difficult;
     grid[8][4].terrain = Difficult;
     grid[8][9].terrain = Difficult;
+    
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        ClearBackground(WHITE);
-       
-        // Call A* algorithm
-        const std::vector<Node*> path = astar(start, goal, grid);
-
-        // Print the path
-        if(noUpdate)
+        ClearBackground(Grey);
+        
+        // Handle user input to select start and end nodes
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            if (!path.empty())
+            Vector2 mousePos = GetMousePosition();
+            int x = static_cast<int>(mousePos.x) / cellSize;
+            int y = static_cast<int>(mousePos.y) / cellSize;
+            if (x >= 0 && x < rows && y >= 0 && y < cols)
             {
-                std::cout << "Path found :\n";
-                for (const auto& node : path)
+                if (!startSelected)
                 {
-                    std::cout << getTerrainCost(*node) << " -> ";
-                    std::cout << "(" << node->x << ", " << node->y << ") | ";
+                    start = &grid[x][y];
+                    startSelected = true;
+                    printf("start ");
                 }
-                std::cout << '\n';
-
-                // Print the grid with the path marked
-                std::cout << "Grid with path :\n";
-                
+                else if (!endSelected && &grid[x][y] != start)
+                {
+                    goal = &grid[x][y];
+                    endSelected = true;
+                    printf(" end \n");
+                }
             }
-            else
+            noUpdate = false;
+        }
+        // Handle user input to toggle obstacles
+        if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+        {
+            Vector2 mousePos = GetMousePosition();
+            int x = static_cast<int>(mousePos.x) / cellSize;
+            int y = static_cast<int>(mousePos.y) / cellSize;
+            if (x >= 0 && x < rows && y >= 0 && y < cols)
             {
-                std::cout << "Insanity is doing the same thing over and over again and expecting different results. \n";
+                grid[x][y].obstacle = !grid[x][y].obstacle;
+                grid[x][y].terrain = grid[x][y].obstacle ? Obstacle : Normal;
+                grid[x][y].terrainCostMultiplier = getTerrainCost(grid[x][y]);
             }
-            printGridWithPath(grid, path);
-            
-            DrawRectangle(start->x * cellSize, start->y * cellSize, cellSize-1, cellSize-1, YELLOW);
-            DrawRectangle(goal->x * cellSize, goal->y * cellSize, cellSize-1, cellSize-1, RED);
+            noUpdate = false;
         }
         
+        printGridWithPath(grid,{});
+        
+        if (startSelected && endSelected && !start->obstacle && !goal->obstacle)
+        {
+            // Call A* algorithm
+            const std::vector<Node*> path = astar(start, goal, grid);
+
+            // Print the path
+            if(!noUpdate)
+            {
+                /*if (!path.empty())
+                {
+                    std::cout << "Path found :\n";
+                    for (const auto& node : path)
+                    {
+                        std::cout << getTerrainCost(*node) << " -> ";
+                        std::cout << "(" << node->x << ", " << node->y << ") | ";
+                    }
+                    std::cout << '\n';
+
+                    // Print the grid with the path marked
+                    std::cout << "Grid with path :\n";
+                }
+                else
+                {
+                    std::cout << "Insanity is doing the same thing over and over again and expecting different results. \n";
+                }*/
+            }
+            printGridWithPath(grid, path);
+            DrawRectangle(start->x * cellSize, start->y * cellSize, cellSize-1, cellSize-1, YELLOW);
+            DrawRectangle(goal->x * cellSize, goal->y * cellSize, cellSize-1, cellSize-1, RED);
+            noUpdate = true;
+        }
         EndDrawing();
     }
     CloseWindow();
