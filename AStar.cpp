@@ -11,15 +11,16 @@ int width = height;
 
 constexpr int rows = 10;
 constexpr int cols = 10;
-int cellSize = 20;
+int cellSizeX = width / cols;
+int cellSizeY = height / rows;
 
 //Colors
-Color Grey = {125,125,125,255}; 
-Color Path = DARKGRAY; 
-Color Green = GREEN; 
-Color DarkGreen = DARKGREEN; 
-Color Orange = ORANGE; 
-Color Blue = SKYBLUE;
+Color emptyColor = {125,125,125,255}; 
+Color pathColor = DARKGRAY; 
+Color normalColor = GREEN; 
+Color difficultColor = DARKGREEN; 
+Color challengingColor = ORANGE; 
+Color obstacleColor = SKYBLUE;
 
 enum Terrain
 {
@@ -42,12 +43,6 @@ struct Node
         return x == other.x && y == other.y;
     }
 };
-
-int setCellSize()
-{
-    cellSize = height / cols;
-    return cellSize;
-}
 
 float distance(const Node& node1, const Node& node2)
 {
@@ -174,32 +169,32 @@ void printGridWithPath(const std::vector<std::vector<Node>>& grid, const std::ve
             if (find(path.begin(), path.end(), &node) != path.end())
             {
                 //std::cout << " * "; // Mark path nodes with *
-                DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, Path);
+                DrawRectangle(j * cellSizeX, i * cellSizeY, cellSizeX-1, cellSizeY-1, pathColor);
             }
             else if (node.obstacle || node.terrain == Obstacle)
             {
                 //std::cout << " X "; // Mark obstacle nodes with X
-                DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, Blue);
+                DrawRectangle(j * cellSizeX, i * cellSizeY, cellSizeX-1, cellSizeY-1, obstacleColor);
             }
             else if(node.terrain == Normal)
             {
                 //std::cout << " . "; // Mark Normal nodes with .
-                DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, Green);
+                DrawRectangle(j * cellSizeX, i * cellSizeY, cellSizeX-1, cellSizeY-1, normalColor);
             }
             else if(node.terrain == Challenging)
             {
                 //std::cout << " C "; // Mark Challenging nodes with C
-                DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, Orange);
+                DrawRectangle(j * cellSizeX, i * cellSizeY, cellSizeX-1, cellSizeY-1, challengingColor);
             }
             else if(node.terrain == Difficult)
             {
                 //std::cout << " D "; // Mark Difficult nodes with D
-                DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, DarkGreen);
+                DrawRectangle(j * cellSizeX, i * cellSizeY, cellSizeX-1, cellSizeY-1, difficultColor);
             }
             else
             {
                 //std::cout << "E "; // Mark empty nodes with E
-                DrawRectangle(j * cellSize, i * cellSize, cellSize-1, cellSize-1, Grey);
+                DrawRectangle(j * cellSizeX, i * cellSizeY, cellSizeX-1, cellSizeY-1, emptyColor);
             }
         }
         //std::cout << '\n';
@@ -213,8 +208,6 @@ int main()
 {
     InitWindow(width, height, "PathFinding");
     SetTargetFPS(60);
-    
-    setCellSize();
     
     std::vector<std::vector<Node>> grid(rows, std::vector<Node>(cols));
    
@@ -288,7 +281,7 @@ int main()
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        ClearBackground(Grey);
+        ClearBackground(emptyColor);
         
         // Reset start and end selection flags
         if (IsKeyPressed(KEY_R))
@@ -303,8 +296,8 @@ int main()
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
             Vector2 mousePos = GetMousePosition();
-            int x = static_cast<int>(mousePos.x) / cellSize;
-            int y = static_cast<int>(mousePos.y) / cellSize;
+            int x = static_cast<int>(mousePos.x) / cellSizeX;
+            int y = static_cast<int>(mousePos.y) / cellSizeY;
             if (x >= 0 && x < rows && y >= 0 && y < cols)
             {
                 if (!startSelected)
@@ -326,8 +319,8 @@ int main()
         if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
         {
             Vector2 mousePos = GetMousePosition();
-            int x = static_cast<int>(mousePos.x) / cellSize;
-            int y = static_cast<int>(mousePos.y) / cellSize;
+            int x = static_cast<int>(mousePos.x) / cellSizeX;
+            int y = static_cast<int>(mousePos.y) / cellSizeY;
             if (x >= 0 && x < rows && y >= 0 && y < cols)
             {
                 grid[x][y].obstacle = !grid[x][y].obstacle;
@@ -364,10 +357,12 @@ int main()
                 {
                     std::cout << "Insanity is doing the same thing over and over again and expecting different results. \n";
                 }
+                
             }*/
+            
             printGridWithPath(grid, path);
-            DrawRectangle(start->x * cellSize, start->y * cellSize, cellSize-1, cellSize-1, YELLOW);
-            DrawRectangle(goal->x * cellSize, goal->y * cellSize, cellSize-1, cellSize-1, RED);
+            if(start != nullptr) DrawRectangle(start->x * cellSizeX, start->y * cellSizeY, cellSizeX - 1, cellSizeY - 1, YELLOW);
+            if(goal != nullptr) DrawRectangle(goal->x * cellSizeX, goal->y * cellSizeY, cellSizeX - 1, cellSizeY - 1, RED);
             noUpdate = true;
         }
         EndDrawing();
