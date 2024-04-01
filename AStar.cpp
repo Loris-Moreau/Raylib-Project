@@ -6,7 +6,7 @@
 
 bool noUpdate = true;
 
-int height = 900;
+int height = 960;
 int width = height;
 
 constexpr int rows = 10;
@@ -206,9 +206,10 @@ bool endSelected = false;
 
 int main()
 {
-    InitWindow(width, height, "PathFinding");
+    InitWindow(width, height, "PathFinding A*");
+    SetWindowMonitor(GetMonitorCount()-1);
+    //SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
     SetTargetFPS(60);
-    
     std::vector<std::vector<Node>> grid(rows, std::vector<Node>(cols));
    
     // Initialize grid with nodes and set obstacles
