@@ -47,6 +47,7 @@ struct Node
 float distance(const Node& node1, const Node& node2)
 {
     return sqrt(pow(node1.x - node2.x, 2) + pow(node1.y - node2.y, 2));
+    // Narrowing conversion from 'double' to 'float' [bugprone-narrowing-conversion]
 }
 
 float getTerrainCost(const Node& node)
@@ -62,6 +63,7 @@ float getTerrainCost(const Node& node)
         case Obstacle:
             return std::numeric_limits<float>::infinity();
     }
+    return 0;
 }
 
 std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<Node>>& grid)
@@ -204,12 +206,17 @@ void printGridWithPath(const std::vector<std::vector<Node>>& grid, const std::ve
 bool startSelected = false;
 bool endSelected = false;
 
+void initWindow()
+{
+    InitWindow(width, height, "PathFinding AStar");
+    SetWindowMonitor(GetMonitorCount()-1);
+    SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
+}
+
 int main()
 {
-    InitWindow(width, height, "PathFinding A*");
-    SetWindowMonitor(GetMonitorCount()-1);
-    //SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
-    SetTargetFPS(60);
+    initWindow();
+    
     std::vector<std::vector<Node>> grid(rows, std::vector<Node>(cols));
    
     // Initialize grid with nodes and set obstacles
@@ -369,5 +376,5 @@ int main()
         EndDrawing();
     }
     CloseWindow();
-    // return 0;
+    return 0;
 }
