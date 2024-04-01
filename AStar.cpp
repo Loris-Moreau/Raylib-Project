@@ -14,7 +14,7 @@ constexpr int cols = 10;
 int cellSizeX = width / cols;
 int cellSizeY = height / rows;
 
-//Colors
+// Colors
 Color emptyColor = {125,125,125,255}; 
 Color pathColor = DARKGRAY; 
 Color normalColor = GREEN; 
@@ -244,7 +244,7 @@ int main()
     Node* start = grid[0].data(); // Set start node
     Node* goal = &grid[rows - 1][cols - 1];  // Set goal node
     
-    // Set Nodes
+    // Set Terrain Nodes
     grid[1][6].obstacle = true;
     grid[1][7].obstacle = true;
     grid[1][8].obstacle = true;
