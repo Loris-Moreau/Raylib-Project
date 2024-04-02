@@ -22,7 +22,7 @@ Color difficultColor = DARKGREEN;
 Color challengingColor = ORANGE; 
 Color obstacleColor = SKYBLUE;
 
-enum Terrain
+enum Terrain 
 {
     Normal,
     Challenging,
@@ -66,27 +66,6 @@ float getTerrainCost(const Node& node)
     return 0;
 }
 
-/*void ResetNodes()
-{
-    for(Node* node : map)
-    {
-        node->g = 0;
-        node->f = 0;
-        node->parent = nullptr;
-    }
-}
-
-void InitHeuristics(Vector2 goal)
-{
-    for(int x = 0; x < dimensions.x; x++)
-    {
-        for(int y = 0; y < dimensions.y; y++)
-        {
-            map[x][y].h = goal - map[x][y].position;
-        }
-    }
-}*/
-
 std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<Node>>& grid)
 {
     start->terrain = Normal;
@@ -97,7 +76,7 @@ std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<
     start->h = distance(*start, *goal);
     start->f = start->g + start->h;
     openList.push_back(start);
-
+    
     while (!openList.empty())
     {
         // Get the node with the lowest f value
@@ -224,6 +203,32 @@ void printGridWithPath(const std::vector<std::vector<Node>>& grid, const std::ve
     }
 }
 
+void ResetNodes(std::vector<std::vector<Node>>& grid)
+{
+    for(auto& row : grid)
+    {
+        for(auto& node : row)
+        {
+            node.g = 0;
+            node.f = 0;
+            node.parent = nullptr;
+        }
+    }
+}
+
+void InitHeuristics(std::vector<std::vector<Node>>& grid, Vector2 goal)
+{
+    for (int x = 0; x < rows; ++x)
+    {
+        for (int y = 0; y < cols; ++y)
+        {
+            const float dx = static_cast<float>(x) - goal.x;
+            const float dy = static_cast<float>(y) - goal.y;
+            grid[x][y].h = sqrt(dx * dx + dy * dy);
+        }
+    }
+}
+
 bool startSelected = false;
 bool endSelected = false;
 
@@ -263,7 +268,7 @@ int main()
     }
     
     Node* start = grid[0].data(); // Set start node
-    Node* goal = &grid[rows - 1][cols - 1];  // Set goal node
+    const Node* goal = &grid[rows - 1][cols - 1];  // Set goal node
     
     // Set Terrain Nodes
     grid[1][6].obstacle = true;
@@ -306,7 +311,8 @@ int main()
     grid[8][3].terrain = Difficult;
     grid[8][4].terrain = Difficult;
     grid[8][9].terrain = Difficult;
-    
+
+    // RayLib Window Loop
     while (!WindowShouldClose())
     {
         BeginDrawing();
@@ -317,16 +323,17 @@ int main()
         {
             startSelected = false;
             endSelected = false;
+            ResetNodes(grid);
         }
-        if(!start) startSelected = false;
-        if(!goal) endSelected = false;
+        if (!start) startSelected = false;
+        if (!goal) endSelected = false;
         
         // Handle user input to select start and end nodes
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
-            Vector2 mousePos = GetMousePosition();
-            int x = static_cast<int>(mousePos.x) / cellSizeX;
-            int y = static_cast<int>(mousePos.y) / cellSizeY;
+            const Vector2 mousePos = GetMousePosition();
+            const int x = static_cast<int>(mousePos.x) / cellSizeX;
+            const int y = static_cast<int>(mousePos.y) / cellSizeY;
             if (x >= 0 && x < rows && y >= 0 && y < cols)
             {
                 if (!startSelected)
@@ -347,9 +354,9 @@ int main()
         // Handle user input to toggle obstacles
         if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
         {
-            Vector2 mousePos = GetMousePosition();
-            int x = static_cast<int>(mousePos.x) / cellSizeX;
-            int y = static_cast<int>(mousePos.y) / cellSizeY;
+            const Vector2 mousePos = GetMousePosition();
+            const int x = static_cast<int>(mousePos.x) / cellSizeX;
+            const int y = static_cast<int>(mousePos.y) / cellSizeY;
             if (x >= 0 && x < rows && y >= 0 && y < cols)
             {
                 grid[x][y].obstacle = !grid[x][y].obstacle;
@@ -358,16 +365,19 @@ int main()
             }
             noUpdate = false;
         }
-        
-        printGridWithPath(grid,{});
-        
+
+        // Print Grid with no path to at least have something show up 
+        printGridWithPath(grid, {});
+
+        // make sure a valid Start, End node are selected
         if (startSelected && endSelected && !start->obstacle && !goal->obstacle)
         {
             // Call A* algorithm
             const std::vector<Node*> path = astar(start, goal, grid);
 
             // Print the path
-            /*if(!noUpdate)
+            /*
+            if(!noUpdate)
             {
                 if (!path.empty())
                 {
@@ -387,11 +397,13 @@ int main()
                     std::cout << "Insanity is doing the same thing over and over again and expecting different results. \n";
                 }
                 
-            }*/
-            
+            }
+            */
+
+            // print the grid with the Full Computed Path (if valid, else returns an empty path)
             printGridWithPath(grid, path);
-            if(start != nullptr) DrawRectangle(start->x * cellSizeX, start->y * cellSizeY, cellSizeX - 1, cellSizeY - 1, YELLOW);
-            if(goal != nullptr) DrawRectangle(goal->x * cellSizeX, goal->y * cellSizeY, cellSizeX - 1, cellSizeY - 1, RED);
+            if (start != nullptr) DrawRectangle(start->x * cellSizeX, start->y * cellSizeY, cellSizeX - 1, cellSizeY - 1, YELLOW);
+            if (goal != nullptr) DrawRectangle(goal->x * cellSizeX, goal->y * cellSizeY, cellSizeX - 1, cellSizeY - 1, RED);
             noUpdate = true;
         }
         EndDrawing();
