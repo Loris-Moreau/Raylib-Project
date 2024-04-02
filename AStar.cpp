@@ -66,6 +66,27 @@ float getTerrainCost(const Node& node)
     return 0;
 }
 
+void ResetNodes()
+{
+    for(Node* node : map)
+    {
+        node->g = 0;
+        node->f = 0;
+        node->parent = nullptr;
+    }
+}
+
+void InitHeuristics(Vector2 goal)
+{
+    for(int x = 0; x < dimensions.x; x++)
+    {
+        for(int y = 0; y < dimensions.y; y++)
+        {
+            map[x][y].h = goal - map[x][y].position;
+        }
+    }
+}
+
 std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<Node>>& grid)
 {
     start->terrain = Normal;
