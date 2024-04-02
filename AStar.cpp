@@ -66,7 +66,7 @@ float getTerrainCost(const Node& node)
     return 0;
 }
 
-void ResetNodes()
+/*void ResetNodes()
 {
     for(Node* node : map)
     {
@@ -85,7 +85,7 @@ void InitHeuristics(Vector2 goal)
             map[x][y].h = goal - map[x][y].position;
         }
     }
-}
+}*/
 
 std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<Node>>& grid)
 {
