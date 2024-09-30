@@ -20,7 +20,7 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
         {
             // Separation rule: move away from nearby boids
             Vector2 normDiff = Vector2Normalize(difference);
-            separation = Vector2Add(separation, Vector2Scale(normDiff, (minDistance - distance) * separationFactor));
+            separation = Vector2Add(separation, Vector2Scale(normDiff, (minDistance - distance) * separationFactor)); 
         }
 
         if (distance > 0 && distance < minDistance * 5)
@@ -48,17 +48,22 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
     // Add obstacle avoidance
     for (const auto& obstacle : obstacles)
     {
-        // Calculate the distance to the center of the obstacle
+        // Calculate the vector from the boid to the center of the obstacle
         Vector2 obstacleVec = Vector2Subtract(position, obstacle.position);
         float obstacleDistance = Vector2Length(obstacleVec);
         
-        // Check if boid is within the avoidance radius (collision detection)
+        // Calculate the radius of the obstacle
         float obstacleRadius = sqrtf(obstacle.size_x * obstacle.size_x + obstacle.size_y * obstacle.size_y) / 2.0f;
+
+        // Check if the boid is within a danger radius (too close to the obstacle)
         if (obstacleDistance < (minDistance + obstacleRadius))
         {
-            // Apply separation force away from the obstacle
+            // Apply a stronger repulsion force away from the obstacle when too close
             Vector2 normObstacleVec = Vector2Normalize(obstacleVec);
-            separation = Vector2Add(separation, Vector2Scale(normObstacleVec, minDistance - obstacleDistance));
+            
+            // Scale the separation force based on proximity to the obstacle
+            float repulsionStrength = (minDistance + obstacleRadius - obstacleDistance) * obstacleFactor; 
+            separation = Vector2Add(separation, Vector2Scale(normObstacleVec, repulsionStrength));
         }
     }
 
