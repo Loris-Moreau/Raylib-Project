@@ -9,7 +9,7 @@ Obstacle::Obstacle(int sizex, int sizey, Vector2 _position)
 
 Obstacle::~Obstacle() = default;
 
-void Obstacle::DrawObstacle()
+void Obstacle::DrawObstacle() const
 {
     DrawRectangle(static_cast<int>(position.x), static_cast<int>(position.y), size_x, size_y, BLACK);
 }
