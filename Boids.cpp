@@ -87,7 +87,7 @@ void Boids::applyRules(const std::vector<Boids>& flock,
     checkBoundaries(boundsMin, boundsMax);
 }
 
-void Boids::checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax)
+void Boids::checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax) //this is wrong : to fix
 {
     if (position.x < boundsMin.x || position.x > boundsMax.x)
     {
@@ -97,35 +97,6 @@ void Boids::checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax)
     {
         velocity.y *= -1; 
     }
-}
-
-void Boids::checkBoundariesButBetter(const Vector2& boundsMin, const Vector2& boundsMax)
-{
-    /*
-    Vector2 separation = {0, 0};
-    // Add wall avoidance
-    for (const auto& obstacle : obstacles)
-    {
-        // Check if the boid is colliding with the rectangular obstacle
-        const Rectangle obstacleRect = {obstacle.position.x, obstacle.position.y, static_cast<float>(obstacle.size_x), static_cast<float>(obstacle.size_y)};
-        
-        // Check for collision between boid (circle) and obstacle (rectangle)
-        if (CheckCollisionCircleRec(position, radius * 3, obstacleRect))
-        {
-            // Calculate the vector from the boid to the closest point on the obstacle's boundary
-            const Vector2 obstacleEdge = {obstacle.position.x + static_cast<float>(obstacle.size_x) / 2.0f, obstacle.position.y + static_cast<float>(obstacle.size_y) / 2.0f};
-            const Vector2 obstacleVec = Vector2Subtract(position, obstacleEdge);
-            
-            // Normalize the vector to create a repulsion force
-            const Vector2 normObstacleVec = Vector2Normalize(obstacleVec);
-            
-            // Calculate the repulsion strength based on proximity
-            separation = Vector2Add(separation, Vector2Scale(normObstacleVec, repulsionStrength));
-            
-            velocity = Vector2Add(velocity, separation);
-        }
-    }
-    */
 }
 
 void Boids::updatePosition()

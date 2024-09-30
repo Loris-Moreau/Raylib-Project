@@ -33,7 +33,6 @@ public:
                     );
     
     void checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax);
-    void checkBoundariesButBetter(const Vector2& boundsMin, const Vector2& boundsMax);
     void updatePosition();
     void DrawBoid() const;
     
