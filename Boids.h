@@ -12,7 +12,7 @@ class Boids
 public:
     // factors
     float separationFactor = 1.0f;
-    float obstacleFactor = 1.5f;
+    float obstacleFactor = 0.75f;
     
     Vector2 position;
     Vector2 velocity;
