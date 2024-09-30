@@ -134,6 +134,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Boids.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="Obstacle.h" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
