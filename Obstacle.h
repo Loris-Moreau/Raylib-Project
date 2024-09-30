@@ -1,5 +1,4 @@
 #pragma once
-#include <array>
 #include <raylib.h>
 
 class Obstacle
@@ -7,7 +6,7 @@ class Obstacle
 public:
     Obstacle(int sizex, int sizey, Vector2 position);
     ~Obstacle();
-    
+
     void DrawObstacle();
     
     //obstacles[Obstacle];

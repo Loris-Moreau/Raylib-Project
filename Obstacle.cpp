@@ -1,5 +1,4 @@
 #include "Obstacle.h"
-#include <raylib.h>
 
 Obstacle::Obstacle(int sizex, int sizey, Vector2 _position)
 {
