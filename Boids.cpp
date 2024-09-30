@@ -52,7 +52,7 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
         Rectangle obstacleRect = {obstacle.position.x, obstacle.position.y, static_cast<float>(obstacle.size_x), static_cast<float>(obstacle.size_y)};
         
         // Check for collision between boid (circle) and obstacle (rectangle)
-        if (CheckCollisionCircleRec(position, minDistance/3, obstacleRect))
+        if (CheckCollisionCircleRec(position, minDistance/3.0f, obstacleRect))
         {
             // Calculate the vector from the boid to the closest point on the obstacle's boundary
             Vector2 obstacleCenter = {obstacle.position.x + obstacle.size_x / 2.0f, obstacle.position.y + obstacle.size_y / 2.0f};

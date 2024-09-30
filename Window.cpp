@@ -9,13 +9,45 @@ using namespace std;
 int main()
 {
     // Initialize the window
-    constexpr int screenWidth = 800;
-    constexpr int screenHeight = 600;
+    constexpr int screenWidth = 1080;
+    constexpr int screenHeight = 960;
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
 
     // Create a flock of boids
     std::vector<Boids> flock =
     {
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
         Boids(100, 100, 2, 2),
         Boids(200, 200, -2, -2),
         Boids(150, 150, 1.5, -1.5),
@@ -85,16 +117,16 @@ int main()
     // Create some obstacles
     std::vector<Obstacle> obstacles =
     {
-        Obstacle(50, 50, {400, 300}),
-        Obstacle(80, 80, {600, 400}),
-        Obstacle(40, 40, {250, 200})
+        Obstacle(45, 200, {300, 450}),
+        Obstacle(40, 40, {500, 200}),
+        Obstacle(110, 15, {600, 600})
     };
 
     // Define the simulation parameters
-    float minDistance = 25.0f;
-    float alignmentFactor = 0.05f;
-    float cohesionFactor = 0.01f;
-    float maxSpeed = 3.0f;
+    float minDistance = 30.0f;
+    float alignmentFactor = 0.45f;
+    float cohesionFactor = 0.45f;
+    float maxSpeed = 7.4f;
 
     Vector2 boundsMin = {0, 0};      // Minimum boundary (top-left corner)
     Vector2 boundsMax = {screenWidth, screenHeight}; // Maximum boundary (bottom-right corner)
