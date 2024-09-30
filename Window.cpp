@@ -20,8 +20,8 @@ int main()
 
     for (int i = 0; i < flockAmount; ++i)
     {
-        float x = 1 + i ; // Starting x position
-        float y = 100 ; // Alternate y positions for diversity
+        float x = 1 + i; // Starting x position
+        float y = 500; // Alternate y positions for diversity
 
         // Create and add a new boid to the flock
         flock.emplace_back(x, y, 5, 5);
