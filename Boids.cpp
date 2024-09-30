@@ -20,7 +20,7 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
         {
             // Separation rule: move away from nearby boids
             Vector2 normDiff = Vector2Normalize(difference);
-            separation = Vector2Add(separation, Vector2Scale(normDiff, (minDistance - distance) * 0.5f)); // Increased separation force
+            separation = Vector2Add(separation, Vector2Scale(normDiff, (minDistance - distance) * 0.65f)); // Increased separation force
         }
 
         if (distance > 0 && distance < minDistance * 5)
@@ -62,7 +62,7 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
             Vector2 normObstacleVec = Vector2Normalize(obstacleVec);
             
             // Calculate the repulsion strength based on proximity
-            float repulsionStrength = minDistance;  // You can scale this value to adjust repulsion strength
+            float repulsionStrength = 10;  // You can scale this value to adjust repulsion strength
             separation = Vector2Add(separation, Vector2Scale(normObstacleVec, repulsionStrength));
         }
     }
@@ -81,7 +81,6 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
     // Handle boundary conditions (bounce back when hitting the walls)
     checkBoundaries(boundsMin, boundsMax);
 }
-
 
     void Boids::checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax)
     {

@@ -13,43 +13,19 @@ int main()
     constexpr int screenWidth = 1080;
     constexpr int screenHeight = 960;
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
-
-    int flockAmount = 3;
-    // Create a flock of boids
     
-   
-        std::vector<Boids> flock =
-        {
-            Boids(100, 100, 2, 2),
-            Boids(200, 200, -2, -2),
-            Boids(150, 150, 1.5, -1.5),
-            Boids(300, 300, -1, 1),
-            Boids(100, 100, 2, 2),
-            Boids(200, 200, -2, -2),
-            Boids(150, 150, 1.5, -1.5),
-            Boids(300, 300, -1, 1),
-            Boids(100, 100, 2, 2),
-            Boids(200, 200, -2, -2),
-            Boids(150, 150, 1.5, -1.5),
-            Boids(300, 300, -1, 1),
-            Boids(100, 100, 2, 2),
-            Boids(200, 200, -2, -2),
-            Boids(150, 150, 1.5, -1.5),
-            Boids(300, 300, -1, 1),
-            Boids(100, 100, 2, 2),
-            Boids(200, 200, -2, -2),
-            Boids(150, 150, 1.5, -1.5),
-            Boids(300, 300, -1, 1),
-            Boids(100, 100, 2, 2),
-            Boids(200, 200, -2, -2),
-            Boids(150, 150, 1.5, -1.5),
-            Boids(300, 300, -1, 1),
-            Boids(100, 100, 2, 2),
-            Boids(200, 200, -2, -2),
-            Boids(150, 150, 1.5, -1.5),
-            Boids(300, 300, -1, 1),
-            Boids(100, 100, 2, 2)
-        };
+    // Create a flock of boids using a loop
+    int flockAmount = 1000;
+    std::vector<Boids> flock;
+
+    for (int i = 0; i < flockAmount; ++i)
+    {
+        float x = 1 + i ; // Starting x position
+        float y = 100 ; // Alternate y positions for diversity
+
+        // Create and add a new boid to the flock
+        flock.emplace_back(x, y, 5, 5);
+    }
     
     // Create some obstacles
     std::vector<Obstacle> obstacles =
@@ -66,8 +42,8 @@ int main()
     float cohesionFactor = 0.45f;
     float maxSpeed = 7.4f;
 
-    Vector2 boundsMin = {0, 0};      // Minimum boundary (top-left corner)
-    Vector2 boundsMax = {screenWidth, screenHeight}; // Maximum boundary (bottom-right corner)
+    Vector2 boundsMin = {10, 10};      // Minimum boundary (top-left corner)
+    Vector2 boundsMax = {screenWidth-10, screenHeight-10}; // Maximum boundary (bottom-right corner)
 
     SetTargetFPS(60); // Set FPS to 60
     
