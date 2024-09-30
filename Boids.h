@@ -11,14 +11,17 @@ class Boids
 {
 public:
     // factors
-    float separationFactor = 1.0f;
-    float obstacleFactor = 0.75f;
+    float separationFactor = 0.65f;
+    float obstacleFactor = 1.0f;
+    float repulsionStrength = 10.0f;
     
     Vector2 position;
     Vector2 velocity;
-
+    
     Boids(float x, float y, float vx, float vy) : position({x, y}), velocity({vx, vy}) {}
 
+    float radius = 5.0f;
+    
     void applyRules(const std::vector<Boids>& flock,
                     const std::vector<Obstacle>& obstacles, 
                     float minDistance,
@@ -26,19 +29,22 @@ public:
                     float cohesionFactor, 
                     float maxSpeed,
                     const Vector2& boundsMin,
-                    const Vector2& boundsMax);
+                    const Vector2& boundsMax
+                    );
     
     void checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax);
+    void checkBoundariesButBetter(const Vector2& boundsMin, const Vector2& boundsMax);
     void updatePosition();
     void DrawBoid() const;
     
-// Function to simulate a step in the simulation
-void simulateStep(std::vector<Boids>& flock,
-                  const std::vector<Obstacle>& obstacles,
-                  float minDistance,
-                  float alignmentFactor,
-                  float cohesionFactor,
-                  float maxSpeed,
-                  const Vector2& boundsMin,
-                  const Vector2& boundsMax);
+    // Function to simulate a step in the simulation
+    void simulateStep(std::vector<Boids>& flock,
+                      const std::vector<Obstacle>& obstacles,
+                      float minDistance,
+                      float alignmentFactor,
+                      float cohesionFactor,
+                      float maxSpeed,
+                      const Vector2& boundsMin,
+                      const Vector2& boundsMax
+                      );
 };

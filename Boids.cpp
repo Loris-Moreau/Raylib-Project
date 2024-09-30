@@ -1,26 +1,32 @@
 #include "Boids.h"
 
-void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstacle>& obstacles, 
-                    float minDistance, float alignmentFactor, float cohesionFactor, 
-                    float maxSpeed, const Vector2& boundsMin, const Vector2& boundsMax)
+void Boids::applyRules(const std::vector<Boids>& flock,
+                       const std::vector<Obstacle>& obstacles,
+                       float minDistance,
+                       float alignmentFactor,
+                       float cohesionFactor,
+                       float maxSpeed,
+                       const Vector2& boundsMin,
+                       const Vector2& boundsMax
+                       )
 {
     Vector2 separation = {0, 0};
     Vector2 alignment = {0, 0};
     Vector2 cohesion = {0, 0};
     int neighborCount = 0;
 
-    for (const auto& other : flock)
+    for (const Boids& other : flock)
     {
-        if (&other == this) continue; // Skip the current boid (itself)
+        if (&other == this) continue; // Skip self
 
-        Vector2 difference = Vector2Subtract(position, other.position);
-        float distance = Vector2Length(difference);
-
+        const Vector2 difference = Vector2Subtract(position, other.position);
+        const float distance = Vector2Length(difference);
+        
         if (distance < minDistance && distance > 0)
         {
             // Separation rule: move away from nearby boids
-            Vector2 normDiff = Vector2Normalize(difference);
-            separation = Vector2Add(separation, Vector2Scale(normDiff, (minDistance - distance) * 0.65f)); // Increased separation force
+            const Vector2 normDiff = Vector2Normalize(difference);
+            separation = Vector2Add(separation, Vector2Scale(normDiff, (minDistance - distance) * separationFactor)); 
         }
 
         if (distance > 0 && distance < minDistance * 5)
@@ -37,11 +43,11 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
     if (neighborCount > 0)
     {
         // Average the alignment and cohesion influences
-        alignment = Vector2Scale(alignment, 1.0f / neighborCount);
+        alignment = Vector2Scale(alignment, 1.0f / static_cast<float>(neighborCount));
         alignment = Vector2Scale(Vector2Normalize(alignment), alignmentFactor);
 
-        cohesion = Vector2Scale(cohesion, 1.0f / neighborCount);
-        Vector2 cohesionForce = Vector2Subtract(cohesion, position);
+        cohesion = Vector2Scale(cohesion, 1.0f / static_cast<float>(neighborCount));
+        const Vector2 cohesionForce = Vector2Subtract(cohesion, position);
         cohesion = Vector2Scale(Vector2Normalize(cohesionForce), cohesionFactor);
     }
 
@@ -49,20 +55,19 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
     for (const auto& obstacle : obstacles)
     {
         // Check if the boid is colliding with the rectangular obstacle
-        Rectangle obstacleRect = {obstacle.position.x, obstacle.position.y, static_cast<float>(obstacle.size_x), static_cast<float>(obstacle.size_y)};
+        const Rectangle obstacleRect = {obstacle.position.x, obstacle.position.y, static_cast<float>(obstacle.size_x), static_cast<float>(obstacle.size_y)};
         
         // Check for collision between boid (circle) and obstacle (rectangle)
-        if (CheckCollisionCircleRec(position, minDistance / 3.0f, obstacleRect))
+        if (CheckCollisionCircleRec(position, radius * 3, obstacleRect))
         {
             // Calculate the vector from the boid to the closest point on the obstacle's boundary
-            Vector2 obstacleCenter = {obstacle.position.x + obstacle.size_x / 2.0f, obstacle.position.y + obstacle.size_y / 2.0f};
-            Vector2 obstacleVec = Vector2Subtract(position, obstacleCenter);
+            const Vector2 obstacleEdge = {obstacle.position.x + static_cast<float>(obstacle.size_x) / 2.0f, obstacle.position.y + static_cast<float>(obstacle.size_y) / 2.0f};
+            const Vector2 obstacleVec = Vector2Subtract(position, obstacleEdge);
             
             // Normalize the vector to create a repulsion force
-            Vector2 normObstacleVec = Vector2Normalize(obstacleVec);
+            const Vector2 normObstacleVec = Vector2Normalize(obstacleVec);
             
             // Calculate the repulsion strength based on proximity
-            float repulsionStrength = 10;  // You can scale this value to adjust repulsion strength
             separation = Vector2Add(separation, Vector2Scale(normObstacleVec, repulsionStrength));
         }
     }
@@ -82,19 +87,48 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
     checkBoundaries(boundsMin, boundsMax);
 }
 
-    void Boids::checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax)
+void Boids::checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax)
+{
+    if (position.x < boundsMin.x || position.x > boundsMax.x)
     {
-        if (position.x < boundsMin.x || position.x > boundsMax.x)
+        velocity.x *= -1; 
+    }
+    if (position.y < boundsMin.y || position.y > boundsMax.y)
+    {
+        velocity.y *= -1; 
+    }
+}
+
+void Boids::checkBoundariesButBetter(const Vector2& boundsMin, const Vector2& boundsMax)
+{
+    /*
+    Vector2 separation = {0, 0};
+    // Add wall avoidance
+    for (const auto& obstacle : obstacles)
+    {
+        // Check if the boid is colliding with the rectangular obstacle
+        const Rectangle obstacleRect = {obstacle.position.x, obstacle.position.y, static_cast<float>(obstacle.size_x), static_cast<float>(obstacle.size_y)};
+        
+        // Check for collision between boid (circle) and obstacle (rectangle)
+        if (CheckCollisionCircleRec(position, radius * 3, obstacleRect))
         {
-            velocity.x *= -1; // Reverse x direction
-        }
-        if (position.y < boundsMin.y || position.y > boundsMax.y)
-        {
-            velocity.y *= -1; // Reverse y direction
+            // Calculate the vector from the boid to the closest point on the obstacle's boundary
+            const Vector2 obstacleEdge = {obstacle.position.x + static_cast<float>(obstacle.size_x) / 2.0f, obstacle.position.y + static_cast<float>(obstacle.size_y) / 2.0f};
+            const Vector2 obstacleVec = Vector2Subtract(position, obstacleEdge);
+            
+            // Normalize the vector to create a repulsion force
+            const Vector2 normObstacleVec = Vector2Normalize(obstacleVec);
+            
+            // Calculate the repulsion strength based on proximity
+            separation = Vector2Add(separation, Vector2Scale(normObstacleVec, repulsionStrength));
+            
+            velocity = Vector2Add(velocity, separation);
         }
     }
+    */
+}
 
-    void Boids::updatePosition()
+void Boids::updatePosition()
     {
         position = Vector2Add(position, velocity);
     }
@@ -102,7 +136,7 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
     void Boids::DrawBoid() const
     {
         // Draw the boid as a circle in raylib
-        DrawCircleV(position, 5, BLUE); // Circle with radius 5 for each boid
+        DrawCircleV(position, radius, BLUE); // Circle with radius 5 for each boid
     }
 
 

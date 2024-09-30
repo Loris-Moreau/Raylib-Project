@@ -1,4 +1,3 @@
-#include <complex.h>
 using namespace std;
 
 #include <iostream>
@@ -13,22 +12,28 @@ int main()
     constexpr int screenWidth = 1080;
     constexpr int screenHeight = 960;
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
+    SetTargetFPS(60); // Set FPS to 60
     
     // Create a flock of boids using a loop
-    int flockAmount = 1000;
+    constexpr int flockAmount = 1000;
     std::vector<Boids> flock;
 
     for (int i = 0; i < flockAmount; ++i)
     {
-        float x = 1 + i; // Starting x position
-        float y = 500; // Alternate y positions for diversity
+        float x = screenWidth / 2.0f;
+        if (i < screenWidth-10)
+        {
+            x = static_cast<float>(i); // Starting x position
+        }
+        
+        float y = screenHeight / 2.0f; // starting y position
 
         // Create and add a new boid to the flock
         flock.emplace_back(x, y, 5, 5);
     }
     
     // Create some obstacles
-    std::vector<Obstacle> obstacles =
+    const std::vector<Obstacle> obstacles =
     {
         Obstacle(60, 250, {125, 500}),
         Obstacle(65, 65, {500, 75}),
@@ -37,15 +42,14 @@ int main()
     };
 
     // Define the simulation parameters
-    float minDistance = 25.0f;
-    float alignmentFactor = 0.45f;
-    float cohesionFactor = 0.45f;
-    float maxSpeed = 7.4f;
+    constexpr float minDistance = 25.0f;
+    constexpr float alignmentFactor = 0.45f;
+    constexpr float cohesionFactor = 0.45f;
+    constexpr float maxSpeed = 7.4f;
 
-    Vector2 boundsMin = {10, 10};      // Minimum boundary (top-left corner)
-    Vector2 boundsMax = {screenWidth-10, screenHeight-10}; // Maximum boundary (bottom-right corner)
+    constexpr Vector2 boundsMin = {10, 10};      // Minimum boundary (top-left corner)
+    constexpr Vector2 boundsMax = {screenWidth-10, screenHeight-10}; // Maximum boundary (bottom-right corner)
 
-    SetTargetFPS(60); // Set FPS to 60
     
     while (!WindowShouldClose())
     {
@@ -56,18 +60,18 @@ int main()
         BeginDrawing();
         ClearBackground(LIGHTGRAY);
 
-        // Draw boids
-        for (const auto& boid : flock)
-        {
-            boid.DrawBoid();
-        }
-
         // Draw obstacles
-        for (const auto& obstacle : obstacles)
+        for (const Obstacle& obstacle : obstacles)
         {
             obstacle.DrawObstacle();
         }
-
+        
+        // Draw boids
+        for (const Boids& boid : flock)
+        {
+            boid.DrawBoid();
+        }
+        
         EndDrawing();
     }
 
