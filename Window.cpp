@@ -47,6 +47,38 @@ int main()
         Boids(100, 100, 2, 2),
         Boids(200, 200, -2, -2),
         Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
+        Boids(300, 300, -1, 1),
+        Boids(100, 100, 2, 2),
+        Boids(200, 200, -2, -2),
+        Boids(150, 150, 1.5, -1.5),
         Boids(300, 300, -1, 1)
     };
 
@@ -59,7 +91,7 @@ int main()
     };
 
     // Define the simulation parameters
-    float minDistance = 30.0f;
+    float minDistance = 25.0f;
     float alignmentFactor = 0.05f;
     float cohesionFactor = 0.01f;
     float maxSpeed = 3.0f;

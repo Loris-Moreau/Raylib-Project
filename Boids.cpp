@@ -20,7 +20,7 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
         {
             // Separation rule: move away from nearby boids
             Vector2 normDiff = Vector2Normalize(difference);
-            separation = Vector2Add(separation, Vector2Scale(normDiff, (minDistance - distance) * separationFactor)); 
+            separation = Vector2Add(separation, Vector2Scale(normDiff, (minDistance - distance) * 0.5f)); // Increased separation force
         }
 
         if (distance > 0 && distance < minDistance * 5)
@@ -48,21 +48,21 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
     // Add obstacle avoidance
     for (const auto& obstacle : obstacles)
     {
-        // Calculate the vector from the boid to the center of the obstacle
-        Vector2 obstacleVec = Vector2Subtract(position, obstacle.position);
-        float obstacleDistance = Vector2Length(obstacleVec);
+        // Check if the boid is colliding with the rectangular obstacle
+        Rectangle obstacleRect = {obstacle.position.x, obstacle.position.y, static_cast<float>(obstacle.size_x), static_cast<float>(obstacle.size_y)};
         
-        // Calculate the radius of the obstacle
-        float obstacleRadius = sqrtf(obstacle.size_x * obstacle.size_x + obstacle.size_y * obstacle.size_y) / 2.0f;
-
-        // Check if the boid is within a danger radius (too close to the obstacle)
-        if (obstacleDistance < (minDistance + obstacleRadius))
+        // Check for collision between boid (circle) and obstacle (rectangle)
+        if (CheckCollisionCircleRec(position, minDistance/3, obstacleRect))
         {
-            // Apply a stronger repulsion force away from the obstacle when too close
+            // Calculate the vector from the boid to the closest point on the obstacle's boundary
+            Vector2 obstacleCenter = {obstacle.position.x + obstacle.size_x / 2.0f, obstacle.position.y + obstacle.size_y / 2.0f};
+            Vector2 obstacleVec = Vector2Subtract(position, obstacleCenter);
+            
+            // Normalize the vector to create a repulsion force
             Vector2 normObstacleVec = Vector2Normalize(obstacleVec);
             
-            // Scale the separation force based on proximity to the obstacle
-            float repulsionStrength = (minDistance + obstacleRadius - obstacleDistance) * obstacleFactor; 
+            // Calculate the repulsion strength based on proximity
+            float repulsionStrength = minDistance;  // You can scale this value to adjust repulsion strength
             separation = Vector2Add(separation, Vector2Scale(normObstacleVec, repulsionStrength));
         }
     }
@@ -81,6 +81,7 @@ void Boids::applyRules(const std::vector<Boids>& flock, const std::vector<Obstac
     // Handle boundary conditions (bounce back when hitting the walls)
     checkBoundaries(boundsMin, boundsMax);
 }
+
 
     void Boids::checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax)
     {
