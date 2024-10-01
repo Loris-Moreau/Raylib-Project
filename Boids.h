@@ -8,11 +8,6 @@
 #include "Obstacle.h"
 
 enum boidType { blue, red, green };  // Different groups of boids
-/*
-Blue : avoiding Red.
-Red : chasing Green.
-Green : avoiding Blue and chasing Red.
-*/
 
 class Boids
 {

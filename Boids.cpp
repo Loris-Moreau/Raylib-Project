@@ -2,7 +2,8 @@
 
 void Boids::applyRules( const std::vector<Boids>& flock,
                         const std::vector<Obstacle>& obstacles,
-                        float minDistance, float alignmentFactor,
+                        float minDistance,
+                        float alignmentFactor,
                         float cohesionFactor,
                         float maxSpeed,
                         const Vector2& boundsMin,
@@ -165,24 +166,24 @@ void Boids::simulateStep( std::vector<Boids>& flock,
         // predator & prey types for each group
         boidType predatorType;
         float predatorAvoidFactor, preyAttractFactor;
-
+        
         if (boid.type == blue)
         {
             predatorType = red;
-            predatorAvoidFactor = 0.45f; // High avoidance
-            preyAttractFactor = 0.2f;   // Low attraction
+            predatorAvoidFactor = 0.5f; // High avoidance
+            preyAttractFactor = 0.25f;   // Low attraction
         }
         else if (boid.type == red)
         {
             predatorType = green;
-            predatorAvoidFactor = 0.2f; // Low avoidance
-            preyAttractFactor = 0.45f;   // High attraction
+            predatorAvoidFactor = 0.25f; // Low avoidance
+            preyAttractFactor = 0.5f;   // High attraction
         }
         else // (boid.type == green)
         {
             predatorType = blue;
-            predatorAvoidFactor = 0.45f; // Balanced avoidance
-            preyAttractFactor = 0.45f;   // Balanced attraction
+            predatorAvoidFactor = 0.5f; // Balanced avoidance
+            preyAttractFactor = 0.5f;   // Balanced attraction
         }
         
         boid.applyRules(flock, obstacles, minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax, predatorType, predatorAvoidFactor, preyAttractFactor);

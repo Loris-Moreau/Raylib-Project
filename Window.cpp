@@ -15,7 +15,7 @@ int main()
     SetTargetFPS(60); // Set FPS to 60
     
     // Create a flock of boids using a loop to make Marie happy
-    constexpr int flockAmount = 100;
+    constexpr int flockAmount = 250;
     std::vector<Boids> flock;
     
     // Groups Spawn
@@ -29,10 +29,11 @@ int main()
     // Create some obstacles
     const std::vector<Obstacle> obstacles =
     {
-        Obstacle(60, 250, {125, 500}),
-        Obstacle(65, 65, {500, 75}),
-        Obstacle(110, 150, {850, 750}),
-        Obstacle(75, 75, {500, 500})
+        Obstacle(60, 350, {125, 400}),
+        Obstacle(60, 350, {850, 250}),
+        
+        Obstacle(300, 65, {400, 150}),
+        Obstacle(125, 125, {450, 700})
     };
     
     // Define the simulation parameters
