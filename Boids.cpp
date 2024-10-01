@@ -44,8 +44,10 @@ void Boids::applyRules( const std::vector<Boids>& flock,
             neighborCount++;
             
             // Boids follow or avoid mouse
-            bool mouseActive = false;
-            if(mouseActive)
+            bool mouseActive = true;
+
+            if(IsKeyDown(KEY_C))
+            //if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && mouseActive)
             {
                 float mouse_x = float(GetMouseX());
                 float mouse_y = float(GetMouseY());
@@ -53,9 +55,12 @@ void Boids::applyRules( const std::vector<Boids>& flock,
                 Vector2Length(mPos);
                 
                 const Vector2 mDifference = Vector2Subtract(position, mPos);
-                const float mDistance = Vector2Length(mDifference);
                 
                 bool followMouse = true;
+                if(IsKeyDown(KEY_SPACE))
+                {
+                    followMouse = false;
+                }
                 if(followMouse)
                 {
                     // Ha, they think I'm one of them
