@@ -66,12 +66,18 @@ void Boids::applyRules( const std::vector<Boids>& flock,
                     // Ha, they think I'm one of them
                     Vector2 preyDiff = Vector2Normalize(Vector2Subtract(mPos, position));
                     preyAttraction = Vector2Add(preyAttraction, Vector2Scale(preyDiff, preyAttractFactor));
+
+                    float mRFactor = 0.75f;
+                    preyAttraction = Vector2Multiply(preyAttraction,{mRFactor,mRFactor});
                 }
                 else
                 {
                     // Ah, they found out
                     Vector2 predatorDiff = Vector2Normalize(mDifference);
                     predatorAvoidance = Vector2Add(predatorAvoidance, Vector2Scale(predatorDiff, predatorAvoidFactor));
+                    
+                    float mRFactor = 0.65f;
+                    predatorAvoidance = Vector2Multiply(predatorAvoidance,{mRFactor,mRFactor});
                     
                 }
             }
@@ -173,7 +179,7 @@ void Boids::simulateStep( std::vector<Boids>& flock,
                           const Vector2& boundsMax
                          )
 {
-    for (auto& boid : flock)
+    for (Boids& boid : flock)
     {
         // predator & prey types for each group
         boidType predatorType;

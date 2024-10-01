@@ -13,9 +13,9 @@ class Boids
 {
 public:
     // factors
-    float separationFactor = 0.65f;
+    float separationFactor = 0.5f;
     float obstacleFactor = 1.0f;
-    float repulsionStrength = 10.0f;
+    float repulsionStrength = 15.0f;
     
     Vector2 position;
     Vector2 velocity;

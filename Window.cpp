@@ -12,10 +12,10 @@ int main()
     constexpr int screenWidth = 1080;
     constexpr int screenHeight = 960;
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
-    SetTargetFPS(60); // Set FPS to 60
+    SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor())); // Set FPS to 60
     
     // Create a flock of boids using a loop
-    constexpr int flockAmount = 600;
+    constexpr int flockAmount = 500 ;
     std::vector<Boids> flock;
     
     // Groups Spawn
@@ -25,15 +25,17 @@ int main()
         flock.emplace_back(screenWidth/2-150, i, 2, 2, red, RED);
         flock.emplace_back(screenWidth/2+150, i, 2, 2, green, GREEN);
     }
-    
+
+    //x = 1080
+    //y = 960
     // Create some obstacles
     const std::vector<Obstacle> obstacles =
     {
-        Obstacle(60, 350, {125, 400}),
-        Obstacle(60, 350, {850, 250}),
+        Obstacle(screenWidth/18, screenHeight/3, {screenWidth/9.0f, screenHeight/2.5f}),
+        Obstacle(screenWidth/18, screenHeight/3, {screenWidth/1.25f, screenHeight/4.0f}),
         
-        Obstacle(300, 65, {400, 150}),
-        Obstacle(125, 125, {450, 700})
+        Obstacle(screenWidth/4, screenHeight/15, {screenWidth/2.7f, screenHeight/6.0f}),
+        Obstacle(screenWidth/9, screenHeight/8, {screenWidth/2.5f, screenHeight/1.35f})
     };
     
     // Define the simulation parameters
