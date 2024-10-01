@@ -1,9 +1,9 @@
 #include "Obstacle.h"
 
-Obstacle::Obstacle(int sizex, int sizey, Vector2 _position)
+Obstacle::Obstacle(int _sizeX, int _sizeY, Vector2 _position)
 {
-    size_x = sizex;
-    size_y = sizey;
+    size_x = _sizeX;
+    size_y = _sizeY;
     position = _position;
 }
 

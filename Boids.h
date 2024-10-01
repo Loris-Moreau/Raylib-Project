@@ -7,6 +7,13 @@
 #include <cmath>
 #include "Obstacle.h"
 
+enum boidType { blue, red, green };  // Different groups of boids
+/*
+Blue : avoiding Red.
+Red : chasing Green.
+Green : avoiding Blue and chasing Red.
+*/
+
 class Boids
 {
 public:
@@ -18,9 +25,12 @@ public:
     Vector2 position;
     Vector2 velocity;
     
-    Boids(float x, float y, float vx, float vy) : position({x, y}), velocity({vx, vy}) {}
+    boidType type;  // for different boid groups
+    Color color;
+    
+    Boids(float x, float y, float vx, float vy, boidType t, Color c) : position({x, y}), velocity({vx, vy}), type(t), color(c) {}
 
-    float radius = 5.0f;
+    float radius = 5.0f; //size of boid
     
     void applyRules(const std::vector<Boids>& flock,
                     const std::vector<Obstacle>& obstacles, 
@@ -29,7 +39,10 @@ public:
                     float cohesionFactor, 
                     float maxSpeed,
                     const Vector2& boundsMin,
-                    const Vector2& boundsMax
+                    const Vector2& boundsMax,
+                    boidType predatorType,  // Pred for this boid group
+                    float predatorAvoidFactor,
+                    float preyAttractFactor
                     );
     
     void checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax);

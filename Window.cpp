@@ -1,7 +1,7 @@
 using namespace std;
 
 #include <iostream>
-#include "raylib.h"
+#include <raylib.h>
 
 #include "Boids.h"
 #include "Obstacle.h"
@@ -14,22 +14,16 @@ int main()
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
     SetTargetFPS(60); // Set FPS to 60
     
-    // Create a flock of boids using a loop
-    constexpr int flockAmount = 1000;
+    // Create a flock of boids using a loop to make Marie happy
+    constexpr int flockAmount = 100;
     std::vector<Boids> flock;
-
+    
+    // Groups Spawn
     for (int i = 0; i < flockAmount; ++i)
     {
-        float x = screenWidth / 2.0f;
-        if (i < screenWidth-10)
-        {
-            x = static_cast<float>(i); // Starting x position
-        }
-        
-        float y = screenHeight / 2.0f; // starting y position
-
-        // Create and add a new boid to the flock
-        flock.emplace_back(x, y, 5, 5);
+        flock.emplace_back(i, screenHeight/2+200, 2, 2, blue, BLUE);
+        flock.emplace_back(screenWidth/2-150, i, 2, 2, red, RED);
+        flock.emplace_back(screenWidth/2-150, screenHeight/2-200, 2, 2, green, GREEN);
     }
     
     // Create some obstacles
@@ -40,16 +34,16 @@ int main()
         Obstacle(110, 150, {850, 750}),
         Obstacle(75, 75, {500, 500})
     };
-
+    
     // Define the simulation parameters
     constexpr float minDistance = 25.0f;
     constexpr float alignmentFactor = 0.45f;
     constexpr float cohesionFactor = 0.45f;
-    constexpr float maxSpeed = 7.4f;
+    constexpr float maxSpeed = 7.42f;
 
     constexpr Vector2 boundsMin = {10, 10};      // Minimum boundary (top-left corner)
     constexpr Vector2 boundsMax = {screenWidth-10, screenHeight-10}; // Maximum boundary (bottom-right corner)
-
+    
     
     while (!WindowShouldClose())
     {
@@ -59,12 +53,6 @@ int main()
         // Draw everything
         BeginDrawing();
         ClearBackground(LIGHTGRAY);
-
-        // Draw obstacles
-        for (const Obstacle& obstacle : obstacles)
-        {
-            obstacle.DrawObstacle();
-        }
         
         // Draw boids
         for (const Boids& boid : flock)
@@ -72,9 +60,15 @@ int main()
             boid.DrawBoid();
         }
         
+        // Draw obstacles
+        for (const Obstacle& obstacle : obstacles)
+        {
+            obstacle.DrawObstacle();
+        }
+        
         EndDrawing();
     }
 
-    CloseWindow(); // Close window and OpenGL context
+    CloseWindow();
     return 0;
 }
