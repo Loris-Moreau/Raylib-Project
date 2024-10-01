@@ -3,7 +3,9 @@
 ### How the program works : 
 
 Blue attacks Green
+<br>
 Red attacks Blue
+<br>
 Green attacks Red
 
 Hold "c" to have the boids attracted to the mouse,
