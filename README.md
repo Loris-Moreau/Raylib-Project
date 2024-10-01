@@ -5,7 +5,7 @@
 Hold "c" to have the boids attracted to the mouse,
 While holding "c", hold the "spacebar" to have them avoid the mouse.
 
-![Flock Video](https://github.com/Loris-Moreau/Raylib-Project/blob/Intermidiate-AI/Images/Boids Sim 10-01-2024.gif "Flock vid")
+![](https://github.com/Loris-Moreau/Raylib-Project/blob/Intermidiate-AI/Images/Boids_Sim_10-01-2024.gif "Flock vid")
 
 ### Boids : 
 
