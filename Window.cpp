@@ -14,16 +14,16 @@ int main()
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
     SetTargetFPS(60); // Set FPS to 60
     
-    // Create a flock of boids using a loop to make Marie happy
-    constexpr int flockAmount = 250;
+    // Create a flock of boids using a loop
+    constexpr int flockAmount = 600;
     std::vector<Boids> flock;
     
     // Groups Spawn
     for (int i = 0; i < flockAmount; ++i)
     {
-        flock.emplace_back(i, screenHeight/2+200, 2, 2, blue, BLUE);
+        flock.emplace_back(i, screenHeight/2+150, 2, 2, blue, BLUE);
         flock.emplace_back(screenWidth/2-150, i, 2, 2, red, RED);
-        flock.emplace_back(screenWidth/2-150, screenHeight/2-200, 2, 2, green, GREEN);
+        flock.emplace_back(screenWidth/2+150, i, 2, 2, green, GREEN);
     }
     
     // Create some obstacles
@@ -40,7 +40,7 @@ int main()
     constexpr float minDistance = 25.0f;
     constexpr float alignmentFactor = 0.45f;
     constexpr float cohesionFactor = 0.45f;
-    constexpr float maxSpeed = 7.42f;
+    constexpr float maxSpeed = 10.0f;
 
     constexpr Vector2 boundsMin = {10, 10};      // Minimum boundary (top-left corner)
     constexpr Vector2 boundsMax = {screenWidth-10, screenHeight-10}; // Maximum boundary (bottom-right corner)

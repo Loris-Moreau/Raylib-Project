@@ -50,17 +50,24 @@ void Boids::applyRules( const std::vector<Boids>& flock,
                 float mouse_x = float(GetMouseX());
                 float mouse_y = float(GetMouseY());
                 Vector2 mPos = Vector2{mouse_x, mouse_y};
-
+                Vector2Length(mPos);
+                
+                const Vector2 mDifference = Vector2Subtract(position, mPos);
+                const float mDistance = Vector2Length(mDifference);
+                
                 bool followMouse = true;
                 if(followMouse)
                 {
                     // Ha, they think I'm one of them
-                    cohesion = Vector2Add(cohesion, mPos);
+                    Vector2 preyDiff = Vector2Normalize(Vector2Subtract(mPos, position));
+                    preyAttraction = Vector2Add(preyAttraction, Vector2Scale(preyDiff, preyAttractFactor));
                 }
                 else
                 {
                     // Ah, they found out
-                    separation = Vector2Add(separation, mPos);
+                    Vector2 predatorDiff = Vector2Normalize(mDifference);
+                    predatorAvoidance = Vector2Add(predatorAvoidance, Vector2Scale(predatorDiff, predatorAvoidFactor));
+                    
                 }
             }
             // Predator avoidance logic : if this boid has a predator nearby, avoid it

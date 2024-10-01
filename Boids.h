@@ -25,7 +25,7 @@ public:
     
     Boids(float x, float y, float vx, float vy, boidType t, Color c) : position({x, y}), velocity({vx, vy}), type(t), color(c) {}
 
-    float radius = 5.0f; //size of boid
+    float radius = 3.5f; //size of boid
     
     void applyRules(const std::vector<Boids>& flock,
                     const std::vector<Obstacle>& obstacles, 
