@@ -4,9 +4,9 @@
 
 Blue attacks Green
 <br>
-Red attacks Blue
-<br>
 Green attacks Red
+<br>
+Red attacks Blue
 
 Hold "c" to have the boids attracted to the mouse,
 While holding "c", hold the "spacebar" to have them avoid the mouse.
