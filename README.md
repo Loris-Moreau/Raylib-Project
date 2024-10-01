@@ -2,6 +2,10 @@
 
 ### How the program works : 
 
+Blue attacks Green
+Red attacks Blue
+Green attacks Red
+
 Hold "c" to have the boids attracted to the mouse,
 While holding "c", hold the "spacebar" to have them avoid the mouse.
 
