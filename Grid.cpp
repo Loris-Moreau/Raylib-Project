@@ -24,7 +24,7 @@ void Grid::spawnFromFile(const std::string& _filename)
         std::string type;
         iss >> type;
 
-        if (type == "OBSTACLE")
+        if (type == "Obstacle")
         {
             int x, y;
             iss >> x >> y >> width >> height;

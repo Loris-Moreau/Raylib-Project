@@ -6,19 +6,25 @@ using namespace std;
 
 int main()
 {
+    srand(time(nullptr));
+    //R, G, B
+    //R+G=Y, G+B=C, B+R=M
+    constexpr Color choices[3] = {YELLOW, SKYBLUE, MAGENTA};
+    const Color textColor = choices[rand()%3];
+    
     // Init the window
     constexpr int screenWidth = 1080;
     constexpr int screenHeight = 960;
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor())); // Set FPS to the refresh rate of the monitor
 
-    constexpr int flockAmount = 500 ;
+    constexpr int flockAmount = 2000/3; //as of 02/10/2024 : runs at 15~20 fps with 2000 boids
     std::vector<Boids> flock;
     
     // Groups Spawn
     for (int i = 0; i < flockAmount; ++i)
     {
-        flock.emplace_back(i, screenHeight/2+150, 2, 2, blue, BLUE);
+        flock.emplace_back(i, screenHeight/2, 2, 2, blue, BLUE);
         flock.emplace_back(screenWidth/2-150, i, 2, 2, red, RED);
         flock.emplace_back(screenWidth/2+150, i, 2, 2, green, GREEN);
     }
@@ -59,8 +65,10 @@ int main()
         }
         
         grid.draw();
-        
-        std::cout << "FPS : " << GetFPS() << '\n';
+
+        // Runtime performance info
+        DrawText(TextFormat("%02i FPS", GetFPS()), 15, 15, 20, textColor);
+        DrawText(TextFormat("%03.03f ms", GetFrameTime()), 15, 45, 20, textColor);
         
         EndDrawing();
     }
