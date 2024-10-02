@@ -22,8 +22,8 @@ void Boids::applyRules( std::vector<Boids>& flock,
 
     for (const Boids& other : flock)
     {
-        if (&other == this || neighborCount >= neighborLimit) continue; // Skips self
-
+        if (&other == this || neighborCount >= neighborLimit) continue; // Skips self & limits amount of neighbours 
+        
         const Vector2 difference = Vector2Subtract(position, other.position);
         const float distance = Vector2Length(difference);
 

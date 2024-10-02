@@ -11,9 +11,17 @@ int main()
     constexpr int screenHeight = 960;
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor())); // Set FPS to the refresh rate of the monitor
+
+    constexpr int flockAmount = 500 ;
+    std::vector<Boids> flock;
     
-    //int frameSkip = 2; // Update every "frameSkip" frames
-    //int frameCount = 0;
+    // Groups Spawn
+    for (int i = 0; i < flockAmount; ++i)
+    {
+        flock.emplace_back(i, screenHeight/2+150, 2, 2, blue, BLUE);
+        flock.emplace_back(screenWidth/2-150, i, 2, 2, red, RED);
+        flock.emplace_back(screenWidth/2+150, i, 2, 2, green, GREEN);
+    }
     
     // Create a grid
     Grid grid(screenWidth, screenHeight, 25, 25);
@@ -23,27 +31,32 @@ int main()
     constexpr float minDistance = 25.0f;
     constexpr float alignmentFactor = 0.45f;
     constexpr float cohesionFactor = 0.45f;
-    constexpr float maxSpeed = 2.0f;
+    constexpr float maxSpeed = 7.5f;
 
     constexpr Vector2 boundsMin = {10, 10};  // (top-left corner)
     constexpr Vector2 boundsMax = {screenWidth-10, screenHeight-10};  // (bottom-right corner)
     
-    
     while (!WindowShouldClose())
     {
-        //if(frameCount % frameSkip == 0)
-        //{
-            auto& gridBoids = grid.getBoids();
-            for (Boids& boid : gridBoids)
-            {
-                boid.simulateStep(gridBoids, grid.getObstacles(), minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax);
-            }
-        //}
+        /*
+        auto& gridBoids = grid.getBoids();
+        for (Boids& boid : gridBoids)
+        {
+            boid.simulateStep(gridBoids, grid.getObstacles(), minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax);
+        }
+        */
         
-        //frameCount++;
+        // Update the simulation
+        flock[0].simulateStep(flock, grid.getObstacles(), minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax);
         
         BeginDrawing();
         ClearBackground(LIGHTGRAY);
+        
+        // Draw boids
+        for (const Boids& boid : flock)
+        {
+            boid.DrawBoid();
+        }
         
         grid.draw();
         

@@ -12,7 +12,7 @@ public:
     void spawnFromFile(const std::string& _filename);
     void draw() const;
     
-    std::vector<Boids>& getBoids() {return boids;}
+    //std::vector<Boids>& getBoids() {return boids;}
     const std::vector<Obstacle>& getObstacles() const { return obstacles; }
 
 private:
@@ -21,7 +21,6 @@ private:
     int rows;
     int cols;
     
-    std::vector<Boids> boids;
+    //std::vector<Boids> boids;
     std::vector<Obstacle> obstacles;
-    bool isSpawned = false;
 };

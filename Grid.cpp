@@ -9,8 +9,6 @@ Grid::Grid(int _width, int _height, int _rows, int _cols)
 
 void Grid::spawnFromFile(const std::string& _filename)
 {
-    if (isSpawned) return;
-
     std::ifstream file(_filename);
     std::string line;
 
@@ -32,6 +30,7 @@ void Grid::spawnFromFile(const std::string& _filename)
             iss >> x >> y >> width >> height;
             obstacles.emplace_back(width, height, Vector2{(float)x, (float)y});
         }
+        /*
         else if (type == "BOID")
         {
             float x, y, vx = 1, vy = 1;
@@ -61,10 +60,10 @@ void Grid::spawnFromFile(const std::string& _filename)
                 boids.emplace_back(x + (float)i, y + (float)i, vx, vy, type, color);
             }
         }
+        */
     }
 
     file.close();
-    isSpawned = true;
 }
 
 // Draw func
@@ -76,9 +75,11 @@ void Grid::draw() const
         obstacle.DrawObstacle();
     }
 
+    /*
     // boids
     for (const Boids& boid : boids)
     {
         boid.DrawBoid();
     }
+    */
 }
