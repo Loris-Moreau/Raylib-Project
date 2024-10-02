@@ -133,7 +133,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Astar.cpp" />
     <ClCompile Include="Boids.cpp" />
+    <ClCompile Include="Dikjstra.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Obstacle.h" />
     <ClCompile Include="Window.cpp" />
