@@ -1,20 +1,17 @@
 using namespace std;
 
 #include <iostream>
-#include <raylib.h>
-
-#include "Boids.h"
-#include "Obstacle.h"
+#include <raylib.h> 
+#include "Grid.h"
 
 int main()
 {
-    // Initialize the window
+    // Init the window
     constexpr int screenWidth = 1080;
     constexpr int screenHeight = 960;
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
-    SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor())); // Set FPS to 60
-    
-    // Create a flock of boids using a loop
+    SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor())); // Set FPS to the refresh rate of the monitor
+
     constexpr int flockAmount = 500 ;
     std::vector<Boids> flock;
     
@@ -25,35 +22,33 @@ int main()
         flock.emplace_back(screenWidth/2-150, i, 2, 2, red, RED);
         flock.emplace_back(screenWidth/2+150, i, 2, 2, green, GREEN);
     }
-
-    //x = 1080
-    //y = 960
-    // Create some obstacles
-    const std::vector<Obstacle> obstacles =
-    {
-        Obstacle(screenWidth/18, screenHeight/3, {screenWidth/9.0f, screenHeight/2.5f}),
-        Obstacle(screenWidth/18, screenHeight/3, {screenWidth/1.25f, screenHeight/4.0f}),
-        
-        Obstacle(screenWidth/4, screenHeight/15, {screenWidth/2.7f, screenHeight/6.0f}),
-        Obstacle(screenWidth/9, screenHeight/8, {screenWidth/2.5f, screenHeight/1.35f})
-    };
     
+    // Create a grid
+    Grid grid(screenWidth, screenHeight, 25, 25);
+    grid.spawnFromFile("spawn.txt");
+
     // Define the simulation parameters
     constexpr float minDistance = 25.0f;
     constexpr float alignmentFactor = 0.45f;
     constexpr float cohesionFactor = 0.45f;
-    constexpr float maxSpeed = 10.0f;
+    constexpr float maxSpeed = 7.5f;
 
-    constexpr Vector2 boundsMin = {10, 10};      // Minimum boundary (top-left corner)
-    constexpr Vector2 boundsMax = {screenWidth-10, screenHeight-10}; // Maximum boundary (bottom-right corner)
-    
+    constexpr Vector2 boundsMin = {10, 10};  // (top-left corner)
+    constexpr Vector2 boundsMax = {screenWidth-10, screenHeight-10};  // (bottom-right corner)
     
     while (!WindowShouldClose())
     {
+        /*
+        auto& gridBoids = grid.getBoids();
+        for (Boids& boid : gridBoids)
+        {
+            boid.simulateStep(gridBoids, grid.getObstacles(), minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax);
+        }
+        */
+        
         // Update the simulation
-        flock[0].simulateStep(flock, obstacles, minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax);
-
-        // Draw everything
+        flock[0].simulateStep(flock, grid.getObstacles(), minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax);
+        
         BeginDrawing();
         ClearBackground(LIGHTGRAY);
         
@@ -63,11 +58,9 @@ int main()
             boid.DrawBoid();
         }
         
-        // Draw obstacles
-        for (const Obstacle& obstacle : obstacles)
-        {
-            obstacle.DrawObstacle();
-        }
+        grid.draw();
+        
+        std::cout << "FPS : " << GetFPS() << '\n';
         
         EndDrawing();
     }
