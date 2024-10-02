@@ -45,8 +45,6 @@ float getTerrainCost(const Node& node)
             return 2.0f;
         case Obstacle:
             return NULL;
-        case default:
-            return 1.0f;
     }
 }
 
