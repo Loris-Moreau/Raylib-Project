@@ -63,21 +63,3 @@ void dijkstra(int graph[V][V], int src)
     }
     printSolution(dist);
 }
-
-/*
-int main()
-{
-    int graph[V][V] =
-    {
-        0, 10, 15, NULL, 30, NULL, NULL,
-        NULL, 0, NULL, NULL, NULL, 57, NULL,
-        15, NULL, 0, 16, NULL, NULL, 52,
-        NULL, NULL, 13, 0, NULL, NULL, NULL,
-        30, NULL, NULL, NULL, 0, 11, 34,
-        NULL, 49, NULL, NULL, 12, 0, NULL,
-        NULL, NULL, 63, NULL, 35, NULL, 0
-    };
-    dijkstra(graph, 0);
-    return 0;
-}
-*/

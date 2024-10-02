@@ -6,6 +6,7 @@ using namespace std;
 #include "Boids.h"
 #include "Obstacle.h"
 
+
 int main()
 {
     // Initialize the window
@@ -25,9 +26,7 @@ int main()
         flock.emplace_back(screenWidth/2-150, i, 2, 2, red, RED);
         flock.emplace_back(screenWidth/2+150, i, 2, 2, green, GREEN);
     }
-
-    //x = 1080
-    //y = 960
+    
     // Create some obstacles
     const std::vector<Obstacle> obstacles =
     {
@@ -50,6 +49,7 @@ int main()
     
     while (!WindowShouldClose())
     {
+        
         // Update the simulation
         flock[0].simulateStep(flock, obstacles, minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax);
 
@@ -68,6 +68,8 @@ int main()
         {
             obstacle.DrawObstacle();
         }
+
+        std::cout << GetFPS() << '\n';
         
         EndDrawing();
     }
