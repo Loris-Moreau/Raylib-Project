@@ -1,22 +1,27 @@
 #pragma once
 
-#include <raylib.h>
+#include <sstream>
+#include <vector>
+#include "Boids.h"
+#include "Obstacle.h"
 
 class Grid
 {
 public:
-    Grid(Vector2 _size);
-    ~Grid();
+    Grid(int _width, int _height, int _rows, int _cols);
+    void spawnFromFile(const std::string& _filename);
+    void draw() const;
     
-    Vector2 gridSize = {10.0f, 10.0f};
-    
-    // tile size & scale
-private:
-     int scaling = 3;
-     int tileSize = 10;
-public:
-     int scale = scaling * tileSize;
+    std::vector<Boids>& getBoids() {return boids;}
+    const std::vector<Obstacle>& getObstacles() const { return obstacles; }
 
+private:
+    int width;
+    int height;
+    int rows;
+    int cols;
     
-    void debugDraw() const;
+    std::vector<Boids> boids;
+    std::vector<Obstacle> obstacles;
+    bool isSpawned = false;
 };

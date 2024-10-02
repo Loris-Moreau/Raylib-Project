@@ -135,7 +135,6 @@
   <ItemGroup>
     <ClCompile Include="Astar.cpp" />
     <ClCompile Include="Boids.cpp" />
-    <ClCompile Include="City.cpp" />
     <ClCompile Include="Dikjstra.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Obstacle.cpp" />
@@ -144,7 +143,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Boids.h" />
-    <ClInclude Include="City.h" />
     <ClInclude Include="Grid.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
