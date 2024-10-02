@@ -1,13 +1,37 @@
-# Intermidiate AI 2
+# Intermidiate AI
+
+
+runs at 20~25 fps with 2000 Boids
+
 
 ### How the program works : 
-H represents a house (spawn point for a car/worker).
 
-W represents a workplace (target for the car/worker).
+Blue attacks Green
+<br>
+Green attacks Red
+<br>
+Red attacks Blue
 
-R represents a road.
+Hold "c" to have the boids attracted to the mouse,
+While holding "c", hold the "spacebar" to have them avoid the mouse.
 
-. represents empty spaces (no roads, just land).
+![](https://github.com/Loris-Moreau/Raylib-Project/blob/Intermidiate-AI/Images/Boids_Sim_10-01-2024.gif "Flock vid")
 
+### Boids : 
 
-### MAS - Pathfinding : 
+Boids is an artificial life program that produces highly realistic simulations of the flocking behaviour of birds. 
+Each "boid" (an abbreviation of "bird-oid object") follows a straightforward set of rules, which can be summarised as follows :
+
+- **Separation** : boids move away from other boids that are too close
+
+  ![Flock](https://github.com/Loris-Moreau/Raylib-Project/blob/Intermidiate-AI/Images/flock.png "Flock Principle")
+
+  
+- **Alignment** : boids attempt to match the velocities of their neighbors
+
+  ![Alignement](https://github.com/Loris-Moreau/Raylib-Project/blob/Intermidiate-AI/Images/alignment.png "Alignement")
+
+  
+- **Cohesion** : boids move toward the center of mass of their neighbors
+
+  ![Cohesion](https://github.com/Loris-Moreau/Raylib-Project/blob/Intermidiate-AI/Images/cohesion.png "Cohesion")
