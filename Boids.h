@@ -17,7 +17,7 @@ public:
     float obstacleFactor = 1.0f;
     float repulsionStrength = 15.0f;
 
-    int neighborLimit = 70;
+    int neighborLimit = 5;
     
     Vector2 position;
     Vector2 velocity;

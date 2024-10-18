@@ -45,7 +45,7 @@ void initHat()
         }
     }
     
-    start = grid[0].data();
+    start = grid[1].data();
     goal = &grid[rows - 1][cols - 1];
 
     constexpr int minLoop = 1;
@@ -62,13 +62,11 @@ void initHat()
         grid[maxLoop/2+minLoop + xSlideFactor][i].terrain = Road;
     }
 
-    Node* destination1 = &grid[15][7]; // Destination
-    Node* destination2 = &grid[2][0]; 
-    Node* destination3 = &grid[10][4];
-
+    //Destinations
     grid[maxLoop + 1 + xSlideFactor][maxLoop].terrain = BlueWork; 
     grid[maxLoop/2][maxLoop - 1].terrain = RedWork; 
-    grid[maxLoop/2 + maxLoop/4 + xSlideFactor + 1][2].terrain = GreenWork; 
+    grid[maxLoop/2 + maxLoop/4 + xSlideFactor + 1][2].terrain = GreenWork;
+    // Start
     grid[maxLoop/2 + xSlideFactor + 2][maxLoop/2 + 2].terrain = BlueBase; 
     grid[maxLoop/2 + xSlideFactor][4].terrain = RedBase; 
     grid[minLoop][maxLoop/2].terrain = GreenBase;
@@ -121,6 +119,10 @@ int main()
 
     constexpr Vector2 boundsMin = {10, 10};  // (top-left corner)
     constexpr Vector2 boundsMax = {screenWidth-10, screenHeight-10};  // (bottom-right corner)
+
+    /// Debug
+    Ahat.printGridWithPath(grid, {});
+    ///
     
     while (!WindowShouldClose())
     {
