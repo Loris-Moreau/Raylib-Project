@@ -1,39 +1,11 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <cmath>
+#include"Astar.h"
 
-constexpr int rows = 10;
-constexpr int cols = 10;
-
-enum Terrain
-{
-    Normal,
-    Challenging,
-    Difficult,
-    Obstacle
-};
-
-struct Node
-{
-    int x, y; // Position of the node
-    float g, h, f; // Cost values
-    bool obstacle; // Flag to indicate if the node is an obstacle
-    Node* parent; // Pointer to the parent node
-    Terrain terrain; // Terrain type of the node
-    float terrainCostMultiplier; // Cost multiplier based on terrain type
-    bool operator==(const Node& other) const
-    {
-        return x == other.x && y == other.y;
-    }
-};
-
-float distance(const Node& node1, const Node& node2)
+float Astar::distance(const Node& node1, const Node& node2)
 {
     return (float)sqrt(pow(node1.x - node2.x, 2) + pow(node1.y - node2.y, 2));
 }
 
-float getTerrainCost(const Node& node)
+float Astar::getTerrainCost(const Node& node)
 {
     switch (node.terrain)
     {
@@ -43,12 +15,21 @@ float getTerrainCost(const Node& node)
             return 1.5f;
         case Difficult:
             return 2.0f;
-        case Obstacle:
+        case terrainObstacle:
             return NULL;
+        case BlueWork:
+        case RedWork:
+        case GreenWork:
+        case BlueBase:
+        case RedBase:
+        case GreenBase:
+            return 1.0f;
+        case Road:
+            return std::numeric_limits<float>::infinity();
     }
 }
 
-std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<Node>>& grid)
+std::vector<Node*> Astar::astar(Node* start, const Node* goal, std::vector<std::vector<Node>>& grid)
 {
     start->terrain = Normal;
     start->terrainCostMultiplier = getTerrainCost(*start);
@@ -145,7 +126,7 @@ std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<
     return {};
 }
 
-void printGridWithPath(const std::vector<std::vector<Node>>& grid, const std::vector<Node*>& path)
+void Astar::printGridWithPath(const std::vector<std::vector<Node>>& grid, const std::vector<Node*>& path)
 {
     for (int i = 0; i < rows; ++i)
     {
@@ -156,7 +137,7 @@ void printGridWithPath(const std::vector<std::vector<Node>>& grid, const std::ve
             {
                 std::cout << " * "; // Mark path nodes with *
             }
-            else if (node.obstacle || node.terrain == Obstacle)
+            else if (node.obstacle || node.terrain == terrainObstacle)
             {
                 std::cout << " X "; // Mark obstacle nodes with X
             }
@@ -178,5 +159,65 @@ void printGridWithPath(const std::vector<std::vector<Node>>& grid, const std::ve
             }
         }
         std::cout << '\n';
+    }
+}
+
+void Astar::DrawPathWithGrid(std::vector<std::vector<Node>>& grid, const std::vector<Node*>& path)
+{
+    for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < cols; ++j)
+        {
+            const Node& node = grid[j][i];
+
+            if (node.terrain == BlueWork) 
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, DARKBLUE);
+            }
+            else if (node.terrain == RedWork) 
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, RED);
+            }
+            else if (node.terrain == GreenWork) 
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, DARKGREEN);
+            }
+            else if (node.terrain == BlueBase) 
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, SKYBLUE);
+            }
+            else if (node.terrain == RedBase) 
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, MAGENTA);
+            }
+            else if (node.terrain == GreenBase) 
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, GREEN);
+            }
+            else if (std::find(path.begin(), path.end(), &node) != path.end())
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, DARKGRAY);
+            }
+            else if (node.terrain == Road)
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, BLACK);
+            }
+            else if (node.terrain == Normal)
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, LIGHTGRAY);
+            }
+            else if (node.terrain == Challenging)
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, ORANGE);
+            }
+            else if (node.terrain == Difficult)
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, DARKPURPLE);
+            }
+            else
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, WHITE);
+            }
+        }
     }
 }

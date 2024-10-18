@@ -3,7 +3,6 @@
 #include <sstream>
 #include <vector>
 #include "Boids.h"
-#include "Obstacle.h"
 
 class Grid
 {
@@ -18,8 +17,8 @@ public:
 private:
     int width;
     int height;
-    int rows;
-    int cols;
+    int rows_;
+    int cols_;
     
     //std::vector<Boids> boids;
     std::vector<Obstacle> obstacles;

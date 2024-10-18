@@ -5,7 +5,7 @@
 #include <raylib.h>
 
 Grid::Grid(int _width, int _height, int _rows, int _cols)
-    : width(_width), height(_height), rows(_rows), cols(_cols) {}
+    : width(_width), height(_height), rows_(_rows), cols_(_cols) {}
 
 void Grid::spawnFromFile(const std::string& _filename)
 {
