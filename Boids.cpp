@@ -7,17 +7,17 @@ void Boids::applyRules( std::vector<Boids>& flock,
                         float cohesionFactor,
                         float maxSpeed,
                         const Vector2& boundsMin,
-                        const Vector2& boundsMax,
+                        const Vector2& boundsMax/*,
                         boidType predatorType,
                         float predatorAvoidFactor,
-                        float preyAttractFactor
+                        float preyAttractFactor*/
                        )
 {
     Vector2 separation = {0, 0};
     Vector2 alignment = {0, 0};
     Vector2 cohesion = {0, 0};
-    Vector2 predatorAvoidance = {0, 0};
-    Vector2 preyAttraction = {0, 0};
+    /*Vector2 predatorAvoidance = {0, 0};
+    Vector2 preyAttraction = {0, 0};*/
     int neighborCount = 0;
 
     for (const Boids& other : flock)
@@ -58,7 +58,7 @@ void Boids::applyRules( std::vector<Boids>& flock,
                 
                 const Vector2 mDifference = Vector2Subtract(position, mPos);
                 
-                bool followMouse = true;
+                /*bool followMouse = true;
                 if(IsKeyDown(KEY_SPACE))
                 {
                     followMouse = false;
@@ -81,8 +81,9 @@ void Boids::applyRules( std::vector<Boids>& flock,
                     float mRFactor = 0.65f;
                     predatorAvoidance = Vector2Multiply(predatorAvoidance,{mRFactor,mRFactor});
                     
-                }
+                }*/
             }
+            /*
             // Predator avoidance
             if (other.type == predatorType && distance < minDistance * 3)
             {
@@ -95,10 +96,10 @@ void Boids::applyRules( std::vector<Boids>& flock,
             {
                 Vector2 preyDiff = Vector2Normalize(Vector2Subtract(other.position, position));
                 preyAttraction = Vector2Add(preyAttraction, Vector2Scale(preyDiff, preyAttractFactor));
-            }
-        }
-    }
-    
+            }*/
+        } 
+    } 
+            
     if (neighborCount > 0)
     {
         // Average the alignment and cohesion influences
@@ -135,8 +136,8 @@ void Boids::applyRules( std::vector<Boids>& flock,
     velocity = Vector2Add(velocity, separation);
     velocity = Vector2Add(velocity, alignment);
     velocity = Vector2Add(velocity, cohesion);
-    velocity = Vector2Add(velocity, predatorAvoidance);
-    velocity = Vector2Add(velocity, preyAttraction);
+    /*velocity = Vector2Add(velocity, predatorAvoidance);
+    velocity = Vector2Add(velocity, preyAttraction);*/
 
     // Limit velocity
     if (Vector2Length(velocity) > maxSpeed)
@@ -170,42 +171,43 @@ void Boids::DrawBoid() const
     DrawCircleV(position, radius, color);
 }
 
-// Function to simulate a step in the simulation
+        // Function to simulate a step in the simulation
 void Boids::simulateStep( std::vector<Boids>& flock,
-                          const std::vector<Obstacle>& obstacles,
-                          float minDistance,
-                          float alignmentFactor,
-                          float cohesionFactor,
-                          float maxSpeed,
-                          const Vector2& boundsMin,
-                          const Vector2& boundsMax
-                         )
+                                  const std::vector<Obstacle>& obstacles,
+                                  float minDistance,
+                                  float alignmentFactor,
+                                  float cohesionFactor,
+                                  float maxSpeed,
+                                  const Vector2& boundsMin,
+                                  const Vector2& boundsMax
+                                 )
 {
     for (Boids& boid : flock)
     {
-        boidType predatorType;
-        float predatorAvoidFactor, preyAttractFactor;
+        /*
+         boidType predatorType;
+         float predatorAvoidFactor, preyAttractFactor;
+         
+         if (boid.type == blue)
+         {
+             predatorType = red;
+             predatorAvoidFactor = 0.5f; // High avoidance
+             preyAttractFactor = 0.25f;  // Low attraction
+         }
+         else if (boid.type == red)
+         {
+             predatorType = green;
+             predatorAvoidFactor = 0.25f; // Low avoidance
+             preyAttractFactor = 0.5f;  // High attraction
+         }
+         else // (boid.type == green)
+         {
+             predatorType = blue;
+             predatorAvoidFactor = 0.5f; // Balanced avoidance
+             preyAttractFactor = 0.5f;  // Balanced attraction
+         }*/
         
-        if (boid.type == blue)
-        {
-            predatorType = red;
-            predatorAvoidFactor = 0.5f; // High avoidance
-            preyAttractFactor = 0.25f;  // Low attraction
-        }
-        else if (boid.type == red)
-        {
-            predatorType = green;
-            predatorAvoidFactor = 0.25f; // Low avoidance
-            preyAttractFactor = 0.5f;  // High attraction
-        }
-        else // (boid.type == green)
-        {
-            predatorType = blue;
-            predatorAvoidFactor = 0.5f; // Balanced avoidance
-            preyAttractFactor = 0.5f;  // Balanced attraction
-        }
-        
-        boid.applyRules(flock, obstacles, minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax, predatorType, predatorAvoidFactor, preyAttractFactor);
+        boid.applyRules(flock, obstacles, minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax/*, predatorType, predatorAvoidFactor, preyAttractFactor*/);
     }
 
     for (auto& boid : flock)

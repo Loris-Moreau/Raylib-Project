@@ -138,13 +138,13 @@
     <ClCompile Include="Dikjstra.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Obstacle.cpp" />
-    <ClCompile Include="Obstacle.h" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Astar.h" />
     <ClInclude Include="Boids.h" />
     <ClInclude Include="Grid.h" />
+    <ClCompile Include="Obstacle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

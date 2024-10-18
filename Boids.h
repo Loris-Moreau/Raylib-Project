@@ -17,7 +17,7 @@ public:
     float obstacleFactor = 1.0f;
     float repulsionStrength = 15.0f;
 
-    int neighborLimit = 75;
+    int neighborLimit = 70;
     
     Vector2 position;
     Vector2 velocity;
@@ -36,10 +36,10 @@ public:
                     float cohesionFactor, 
                     float maxSpeed,
                     const Vector2& boundsMin,
-                    const Vector2& boundsMax,
+                    const Vector2& boundsMax/*,
                     boidType predatorType,  // Pred for this boid group
                     float predatorAvoidFactor,
-                    float preyAttractFactor
+                    float preyAttractFactor*/
                     );
     
     void checkBoundaries(const Vector2& boundsMin, const Vector2& boundsMax);

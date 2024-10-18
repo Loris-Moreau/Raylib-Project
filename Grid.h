@@ -2,13 +2,15 @@
 
 #include <sstream>
 #include <vector>
+
 #include "Boids.h"
+#include "Astar.h"
 
 class Grid
 {
 public:
     Grid(int _width, int _height, int _rows, int _cols);
-    void spawnFromFile(const std::string& _filename);
+    void spawnFromFile(const std::string& _filename, std::vector<std::vector<Node>>& grid);
     void draw() const;
     
     //std::vector<Boids>& getBoids() {return boids;}
@@ -22,4 +24,6 @@ private:
     
     //std::vector<Boids> boids;
     std::vector<Obstacle> obstacles;
+
+    Astar astarion;
 };

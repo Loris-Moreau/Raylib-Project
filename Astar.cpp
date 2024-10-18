@@ -200,7 +200,7 @@ void Astar::DrawPathWithGrid(std::vector<std::vector<Node>>& grid, const std::ve
             }
             else if (node.terrain == Road)
             {
-                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, BLACK);
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, WHITE);
             }
             else if (node.terrain == Normal)
             {

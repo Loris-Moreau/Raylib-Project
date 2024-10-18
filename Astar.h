@@ -52,9 +52,4 @@ public:
     float distance(const Node& node1, const Node& node2);
     float getTerrainCost(const Node& node);
     
-private: 
-    int rows = 20;
-    int cols = 20;
-    int rectWidth = 50;
-    int rectHeight = 50;
 };

@@ -1,10 +1,2 @@
-Obstacle 100 280 30 400
-Obstacle 340 125 400 30
-
-Obstacle 925 280 30 400
-Obstacle 340 825 400 30
-
-Obstacle 500 400 100 100
-
-Obstacle 300 275 10 400
+Obstacle 1 1 1 1
 
