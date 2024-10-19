@@ -133,29 +133,57 @@ void Astar::printGridWithPath(const std::vector<std::vector<Node>>& grid, const 
         for (int j = 0; j < cols; ++j)
         {
             const Node& node = grid[i][j];
-            if (std::find(path.begin(), path.end(), &node) != path.end())
+            if (node.terrain == BlueWork) 
             {
-                std::cout << " * "; // Mark path nodes with *
+                std::cout << "Bw";
             }
-            else if (node.obstacle || node.terrain == terrainObstacle)
+            else if (node.terrain == RedWork) 
             {
-                std::cout << " X "; // Mark obstacle nodes with X
+                std::cout << "Rw";
             }
-            else if(node.terrain == Normal)
+            else if (node.terrain == GreenWork) 
             {
-                std::cout << " . "; // Mark Normal nodes with .
+                std::cout << "Gw";
             }
-            else if(node.terrain == Challenging)
+            else if (node.terrain == BlueBase) 
             {
-                std::cout << " C "; // Mark Challenging nodes with C
+                std::cout << "Bb";
             }
-            else if(node.terrain == Difficult)
+            else if (node.terrain == RedBase) 
             {
-                std::cout << " D "; // Mark Difficult nodes with D
+                std::cout << "Rb";
+            }
+            else if (node.terrain == GreenBase) 
+            {
+                std::cout << "Gb";
+            }
+            else if (std::find(path.begin(), path.end(), &node) != path.end())
+            {
+                std::cout << "*";
+            }
+            else if (node.terrain == Road)
+            {
+                std::cout << "R";
+            }
+            else if (node.terrain == Normal)
+            {
+                std::cout << ".";
+            }
+            else if (node.terrain == Challenging)
+            {
+                std::cout << "C";
+            }
+            else if (node.terrain == Difficult)
+            {
+                std::cout << "D";
+            }
+            else if(node.terrain == terrainObstacle)
+            {
+                std::cout << "X";
             }
             else
             {
-                std::cout << "E "; // Mark empty nodes with E
+                std::cout << "E";
             }
         }
         std::cout << '\n';
@@ -213,6 +241,10 @@ void Astar::DrawPathWithGrid(std::vector<std::vector<Node>>& grid, const std::ve
             else if (node.terrain == Difficult)
             {
                 DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, DARKPURPLE);
+            }
+            else if (node.terrain == terrainObstacle)
+            {
+                DrawRectangle(j * rectWidth, i * rectHeight, rectWidth - 1, rectHeight - 1, GOLD);
             }
             else
             {

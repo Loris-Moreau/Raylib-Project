@@ -13,12 +13,20 @@ const int padding = 1;
 bool startSelected = false;
 bool endSelected = false;
 
-constexpr int flockAmount = 1000; //as of 02/10/2024 : runs at 15~20 fps with 2000 boids
+constexpr int flockAmount = 2000; //as of 02/10/2024 : runs at 15~20 fps with 2000 boids
 
 Astar Ahat;
 
-Node* start;
-Node* goal;
+Node* blueStart;
+Node* blueGoal;
+
+Node* redStart;
+Node* redGoal;
+
+Node* greenGtart;
+Node* greenGoal;
+
+
 std::vector<std::vector<Node>> grid(rows, std::vector<Node>(cols));
 
 void initHat()
@@ -45,9 +53,6 @@ void initHat()
         }
     }
     
-    start = grid[1].data();
-    goal = &grid[rows - 1][cols - 1];
-
     constexpr int minLoop = 1;
     constexpr int maxLoop = 17;
     constexpr int xSlideFactor = 1;
@@ -63,18 +68,32 @@ void initHat()
     }
 
     //Destinations
-    grid[maxLoop + 1 + xSlideFactor][maxLoop].terrain = BlueWork; 
-    grid[maxLoop/2][maxLoop - 1].terrain = RedWork; 
+    /// Blue
+    grid[maxLoop + 1 + xSlideFactor][maxLoop].terrain = BlueWork;
+    blueGoal = &grid[maxLoop + 1 + xSlideFactor][maxLoop];
+    /// Red
+    grid[maxLoop/2][maxLoop - 1].terrain = RedWork;
+    redGoal = &grid[maxLoop/2][maxLoop - 1];
+    /// Green
     grid[maxLoop/2 + maxLoop/4 + xSlideFactor + 1][2].terrain = GreenWork;
+    greenGoal = &grid[maxLoop/2 + maxLoop/4 + xSlideFactor + 1][2];
+    
     // Start
+    ///Blue
+    blueStart = &grid[maxLoop/2 + xSlideFactor + 2][maxLoop/2 + 2];
     grid[maxLoop/2 + xSlideFactor + 2][maxLoop/2 + 2].terrain = BlueBase; 
+   
+    ///Red
     grid[maxLoop/2 + xSlideFactor][4].terrain = RedBase; 
+    redStart = &grid[maxLoop/2 + xSlideFactor][4];
+    ///Green
     grid[minLoop][maxLoop/2].terrain = GreenBase;
+    greenGtart = &grid[minLoop][maxLoop/2];
 }
 
 int main()
 {
-    bool randColor = true;
+    bool randColor = false;
     Color textColor = SKYBLUE;
     if(randColor)
     {
@@ -85,11 +104,12 @@ int main()
         textColor = choices[rand()%3];
     }
     
-    //
     
     // Init the window
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor())); // Set FPS to the refresh rate of the monitor
+    const Image iconImage = LoadImage("Fox.jpg");
+    SetWindowIcon(iconImage);
     
     std::vector<Boids> flock;
 
@@ -97,14 +117,25 @@ int main()
     initHat();
     
     // std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<Node>>& grid)
-    Ahat.astar(start, goal, grid);
+    Ahat.astar(blueStart, blueGoal, grid);
+    Ahat.astar(redStart, redGoal, grid);
+    Ahat.astar(greenGtart, greenGoal, grid);
     
     // Groups Spawn
+    int b;
     for (int i = 0; i < flockAmount/3; ++i)
     {
-        flock.emplace_back(i, screenHeight/2, 2, 2, blue, BLUE);
-        flock.emplace_back(screenWidth/2-150, i, 2, 2, red, RED);
-        flock.emplace_back(screenWidth/2+150, i, 2, 2, green, GREEN);
+        if(i >= screenWidth || i >= screenHeight || i < 20)
+        {
+            b = screenHeight/2;
+        }
+        else
+        {
+            b = i;
+        }
+        flock.emplace_back(b, screenHeight/2, 2, 2, blue, BLUE);
+        flock.emplace_back(screenWidth/2-150, b, 2, 2, red, RED);
+        flock.emplace_back(screenWidth/2+150, b, 2, 2, green, GREEN);
     }
     
     // Create a grid
@@ -122,18 +153,10 @@ int main()
 
     /// Debug
     Ahat.printGridWithPath(grid, {});
-    ///
+    /// haha
     
     while (!WindowShouldClose())
     {
-        /*
-        auto& gridBoids = grid.getBoids();
-        for (Boids& boid : gridBoids)
-        {
-            boid.simulateStep(gridBoids, grid.getObstacles(), minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax);
-        }
-        */
-        
         // Update the simulation
         flock[0].simulateStep(flock, spawnGrid.getObstacles(), minDistance, alignmentFactor, cohesionFactor, maxSpeed, boundsMin, boundsMax);
         
@@ -158,6 +181,8 @@ int main()
         EndDrawing();
     }
 
+    UnloadImage(iconImage);
+    
     CloseWindow();
     return 0;
 }
