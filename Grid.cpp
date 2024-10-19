@@ -1,9 +1,5 @@
 #include "Grid.h"
 
-#include <iostream>
-#include <fstream>
-#include <raylib.h>
-
 Grid::Grid(int _width, int _height, int _rows, int _cols)
     : width(_width), height(_height), rows_(_rows), cols_(_cols) {}
 
@@ -40,12 +36,16 @@ void Grid::spawnFromFile(const std::string& _filename, std::vector<std::vector<N
         std::istringstream iss(line);
         iss >> type;
         
+        /*if (grid.obstacle == true)
+        {
+            type = "Obstacle";
+        }*/
         if (type == "Obstacle")
         {
-            
             iss >> x >> y >> width >> height;
             obstacles.emplace_back(width, height, Vector2{(float)x, (float)y});
         }
+        
         /*
         else if (type == "BOID")
         {
@@ -78,7 +78,7 @@ void Grid::spawnFromFile(const std::string& _filename, std::vector<std::vector<N
         }
         */
     }
-
+    
     file.close();
 }
 

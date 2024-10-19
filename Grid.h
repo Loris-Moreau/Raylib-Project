@@ -1,10 +1,13 @@
 #pragma once
 
+#include <fstream>
+#include <iostream>
+#include <raylib.h>
 #include <sstream>
 #include <vector>
 
-#include "Boids.h"
 #include "Astar.h"
+#include "Boids.h"
 
 class Grid
 {

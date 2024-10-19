@@ -1,6 +1,5 @@
 using namespace std;
 
-#include <iostream>
 #include <raylib.h> 
 
 #include "Grid.h"
@@ -8,12 +7,10 @@ using namespace std;
 constexpr int screenWidth = 1080;
 constexpr int screenHeight = 960;
 
-const int padding = 1;
-
 bool startSelected = false;
 bool endSelected = false;
 
-constexpr int flockAmount = 2000; //as of 02/10/2024 : runs at 15~20 fps with 2000 boids
+constexpr int flockAmount = 10; //as of 02/10/2024 : runs at 15~20 fps with 2000 boids
 
 Astar Ahat;
 
@@ -23,7 +20,7 @@ Node* blueGoal;
 Node* redStart;
 Node* redGoal;
 
-Node* greenGtart;
+Node* greenStart;
 Node* greenGoal;
 
 
@@ -31,8 +28,6 @@ std::vector<std::vector<Node>> grid(rows, std::vector<Node>(cols));
 
 void initHat()
 {
-    //std::vector<std::vector<Node>> grid(rows, std::vector<Node>(cols));
-
     for (int i = 0; i < rows; ++i)
     {
         for (int j = 0; j < cols; ++j)
@@ -41,13 +36,14 @@ void initHat()
             grid[i][j].y = j;
             grid[i][j].parent = nullptr;
 
-            if (grid[i][j].obstacle)
+            if(grid[i][j].terrain == Normal)
             {
-                grid[i][j].terrain = Road;
+                grid[i][j].terrain = terrainObstacle;
+                grid[i][j].obstacle = true;
             }
-            else
+            else if (grid[i][j].obstacle)
             {
-                grid[i][j].terrain = Normal;
+                grid[i][j].terrain = terrainObstacle;
             }
             grid[i][j].terrainCostMultiplier = Ahat.getTerrainCost(grid[i][j]);
         }
@@ -56,18 +52,19 @@ void initHat()
     constexpr int minLoop = 1;
     constexpr int maxLoop = 17;
     constexpr int xSlideFactor = 1;
-    for(int i = minLoop; i <= maxLoop; i++) // four walls
+    for(int i = minLoop; i <= maxLoop; i++) 
     {
+        // four walls
         grid[minLoop + xSlideFactor][i].terrain = Road;
         grid[i + xSlideFactor][minLoop].terrain = Road;
         grid[maxLoop + xSlideFactor][i].terrain = Road;
         grid[i + xSlideFactor][maxLoop].terrain = Road;
-        
-        grid[i + xSlideFactor][maxLoop/2+minLoop].terrain = Road; // Center Cross
+        // Center Cross
+        grid[i + xSlideFactor][maxLoop/2+minLoop].terrain = Road; 
         grid[maxLoop/2+minLoop + xSlideFactor][i].terrain = Road;
     }
 
-    //Destinations
+    // Destinations
     /// Blue
     grid[maxLoop + 1 + xSlideFactor][maxLoop].terrain = BlueWork;
     blueGoal = &grid[maxLoop + 1 + xSlideFactor][maxLoop];
@@ -82,33 +79,31 @@ void initHat()
     ///Blue
     blueStart = &grid[maxLoop/2 + xSlideFactor + 2][maxLoop/2 + 2];
     grid[maxLoop/2 + xSlideFactor + 2][maxLoop/2 + 2].terrain = BlueBase; 
-   
     ///Red
     grid[maxLoop/2 + xSlideFactor][4].terrain = RedBase; 
     redStart = &grid[maxLoop/2 + xSlideFactor][4];
     ///Green
     grid[minLoop][maxLoop/2].terrain = GreenBase;
-    greenGtart = &grid[minLoop][maxLoop/2];
+    greenStart = &grid[minLoop][maxLoop/2];
 }
 
 int main()
 {
-    bool randColor = false;
+    constexpr bool randColor = true;
     Color textColor = SKYBLUE;
     if(randColor)
     {
-        srand(time(nullptr));
+        srand((int)time(nullptr));
         //R, G, B
         //R+G=Y, G+B=C, B+R=M
         constexpr Color choices[3] = {YELLOW, SKYBLUE, MAGENTA};
         textColor = choices[rand()%3];
     }
     
-    
     // Init the window
     InitWindow(screenWidth, screenHeight, "Intermediate AI");
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor())); // Set FPS to the refresh rate of the monitor
-    const Image iconImage = LoadImage("Fox.jpg");
+    const Image iconImage = LoadImage("Fox.png");
     SetWindowIcon(iconImage);
     
     std::vector<Boids> flock;
@@ -119,7 +114,7 @@ int main()
     // std::vector<Node*> astar(Node* start, const Node* goal, std::vector<std::vector<Node>>& grid)
     Ahat.astar(blueStart, blueGoal, grid);
     Ahat.astar(redStart, redGoal, grid);
-    Ahat.astar(greenGtart, greenGoal, grid);
+    Ahat.astar(greenStart, greenGoal, grid);
     
     // Groups Spawn
     int b;
@@ -139,20 +134,22 @@ int main()
     }
     
     // Create a grid
-    Grid spawnGrid(screenWidth, screenHeight, 25, 25);
+    Grid spawnGrid(screenWidth, screenHeight, 20, 20);
     spawnGrid.spawnFromFile("spawn.txt", grid);
     
     // Define the simulation parameters
     constexpr float minDistance = 25.0f;
     constexpr float alignmentFactor = 0.45f;
     constexpr float cohesionFactor = 0.45f;
-    constexpr float maxSpeed = 7.5f;
+    constexpr float maxSpeed = 4.5f;
 
     constexpr Vector2 boundsMin = {10, 10};  // (top-left corner)
     constexpr Vector2 boundsMax = {screenWidth-10, screenHeight-10};  // (bottom-right corner)
 
     /// Debug
-    Ahat.printGridWithPath(grid, {});
+    Ahat.printGridWithPath(grid, Ahat.astar(blueStart, blueGoal, grid));
+    //Ahat.printGridWithPath(grid, Ahat.astar(redStart, redGoal, grid));
+    //Ahat.printGridWithPath(grid, Ahat.astar(greenStart, greenGoal, grid));
     /// haha
     
     while (!WindowShouldClose())
